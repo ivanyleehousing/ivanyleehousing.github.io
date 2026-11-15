@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Miranda Ave Dashboard</title>
+    <style>
+        :root {
+            --bg: #f3efe8;
+            --card: #faf8f4;
+            --navy: #14213d;
+            --red: #a8142f;
+            --gold: #b08d57;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg)
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #555;
+            font-size: 12px;
+            line-height: 1.35
+        }
+
+        #stage {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1250px;
+            height: 1985px
+        }
+
+        .wrap {
+            width: 1250px;
+            height: 1985px;
+            padding: 14px 14px 10px;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 5px;
+            overflow: hidden
+        }
+
+        .dashboard-content {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 10px
+        }
+
+        h1 {
+            font-size: 36px;
+            color: var(--navy);
+            font-weight: 800;
+            line-height: 1
+        }
+
+        .sub {
+            font-size: 16px;
+            color: #666;
+            margin: 2px 0 8px
+        }
+
+        .kpis {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 5px
+        }
+
+        .kpi {
+            background: #fff;
+            border-radius: 6px;
+            padding: 8px;
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        .kpi img {
+            width: 32px;
+            height: 32px;
+            flex: none;
+            object-fit: contain
+        }
+
+        .kpi b {
+            display: block;
+            font-size: 17px;
+            color: var(--red)
+        }
+
+        .kpi span {
+            font-size: 10.5px;
+            color: var(--navy);
+            line-height: 1.2
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 6px;
+            padding: 10px
+        }
+
+        .hd {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--navy);
+            text-transform: uppercase;
+            margin-bottom: 6px
+        }
+
+        .hd em {
+            font-style: normal;
+            background: var(--red);
+            color: #fff;
+            border-radius: 50%;
+            min-width: 22px;
+            height: 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px
+        }
+
+        .ul {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 4px
+        }
+
+        .row {
+            display: flex;
+            gap: 10px
+        }
+
+        h3 {
+            font-size: 13px;
+            color: var(--gold);
+            margin: 4px 0
+        }
+
+        h3.r {
+            color: var(--red)
+        }
+
+        .it {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 7px
+        }
+
+        .it img {
+            width: 26px;
+            height: 26px;
+            flex: none;
+            object-fit: contain
+        }
+
+        .it i {
+            font-style: normal;
+            font-size: 20px;
+            color: var(--gold);
+            width: 26px;
+            text-align: center;
+            flex: none
+        }
+
+        .it i.r {
+            color: var(--red)
+        }
+
+        .it b {
+            display: block;
+            color: var(--navy);
+            font-size: 11.5px
+        }
+
+        .ph {
+            background: #e6e2da;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8d8678;
+            font-size: 12px;
+            text-align: center
+        }
+
+        .pill {
+            background: #d9eefa;
+            color: var(--navy);
+            font-weight: 700;
+            font-size: 14px;
+            padding: 7px 10px;
+            margin-bottom: 8px
+        }
+
+        ul {
+            list-style: none
+        }
+
+        li {
+            padding-left: 16px;
+            position: relative;
+            margin-bottom: 6px
+        }
+
+        li:before {
+            content: "▶";
+            position: absolute;
+            left: 0;
+            color: #9a9285;
+            font-size: 9px;
+            top: 2px
+        }
+
+        b.n {
+            color: var(--navy)
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 10.5px
+        }
+
+        th,
+        td {
+            padding: 3px 5px;
+            text-align: center;
+            border-bottom: 1px solid #fff
+        }
+
+        th:first-child,
+        td:first-child {
+            text-align: left
+        }
+
+        th {
+            background: #4a5568;
+            color: #fff;
+            font-size: 10px
+        }
+
+        td {
+            background: #f1eee8
+        }
+
+        .bl td,
+        td.bl,
+        th.lb {
+            background: #e3f2fb;
+            color: #14213d
+        }
+
+        .pu td,
+        td.pu,
+        th.lp {
+            background: #efe3fa;
+            color: #14213d
+        }
+
+        .ye td,
+        td.ye {
+            background: #fbe9b4;
+            font-weight: 700
+        }
+
+        .gr td,
+        td.gr {
+            background: #eaf1dc
+        }
+
+        .rd td,
+        td.rd {
+            background: #f8ddd6
+        }
+
+        th.lb {
+            background: #d3ebf8
+        }
+
+        th.lp {
+            background: #e2d3f5
+        }
+
+        .h-bl {
+            background: #1f5f99 !important
+        }
+
+        .h-or {
+            background: #d4862a !important
+        }
+
+        .h-pu {
+            background: #6a3d9a !important
+        }
+
+        .h-gr {
+            background: #7a9a3f !important
+        }
+
+        .h-rd {
+            background: #c0442f !important
+        }
+
+        .eco td {
+            background: #f1eee8;
+            border-bottom: 1px solid #ddd
+        }
+
+        .eco th + th {
+            border-left: 1px solid rgba(255, 255, 255, .6)
+        }
+
+        .eco td + td {
+            border-left: 1px solid #ddd
+        }
+
+        .eco td.i {
+            padding-left: 14px;
+            font-style: italic
+        }
+
+        .eco th {
+            font-size: 10.5px
+        }
+        .eco-note {
+            background: #f3ead8;
+            border-radius: 4px;
+            padding: 4px 6px;
+            font-size: 9.5px;
+            font-style: italic;
+            margin-top: 4px
+        }
+        .box {
+            border-radius: 4px;
+            padding: 8px
+        }
+
+        .renter-profile-card,
+        .amenity-card {
+            display: flex;
+            flex-direction: column;
+            min-height: 0
+        }
+
+        .renter-profile-card .profile-columns,
+        .renter-profile-card .profile-block {
+            min-height: 0
+        }
+
+        .profile-columns {
+            display: grid;
+            flex: 1;
+            min-height: 0;
+            gap: 8px
+        }
+
+        .profile-block {
+            display: flex;
+            flex-direction: column;
+            min-width: 0
+        }
+
+        .profile-panels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            flex: 1;
+            min-height: 0;
+            gap: 6px
+        }
+
+        .profile-panel {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            padding: 8px;
+            border-radius: 4px;
+            background: #d9eefa;
+            font-size: 11px
+        }
+
+        .profile-panel.purple {
+            background: #eadcf8
+        }
+
+        .profile-panel b {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--navy);
+            font-size: 12px
+        }
+
+        .profile-panel p {
+            margin-top: 4px;
+            font-size: 11px
+        }
+
+        .positioning-copy {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px
+        }
+
+        .positioning-copy img {
+            width: 30px;
+            height: 30px;
+            flex: none;
+            object-fit: contain
+        }
+
+        .profile-detail {
+            display: flex;
+            align-items: flex-start;
+            gap: 5px
+        }
+
+        .profile-detail img {
+            width: 18px;
+            height: 18px;
+            flex: none;
+            object-fit: contain
+        }
+
+        .positioning-icon,
+        .hd-icon,
+        .amenity-icon {
+            width: 22px;
+            height: 22px;
+            object-fit: contain
+        }
+
+        .positioning-icon {
+            display: block;
+            width: 30px;
+            height: 30px;
+            margin: 0 auto 4px
+        }
+
+        .hd-icon {
+            margin-right: 4px
+        }
+
+        .profile-detail {
+            display: flex;
+            align-items: flex-start;
+            gap: 5px
+        }
+
+        .profile-detail img {
+            width: 18px;
+            height: 18px;
+            flex: none;
+            object-fit: contain
+        }
+
+        .tan {
+            background: #f3ead8
+        }
+
+        .sm {
+            font-size: 9.5px
+        }
+
+        .nv {
+            color: var(--navy)
+        }
+
+        .am h4 {
+            font-size: 12.5px;
+            color: var(--navy);
+            margin-bottom: 5px
+        }
+
+        .am p {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px
+        }
+
+        .am p i {
+            font-style: normal;
+            color: var(--navy);
+            font-size: 15px;
+            width: 22px;
+            text-align: center;
+            flex: none
+        }
+
+        .am p img {
+            width: 22px;
+            height: 22px;
+            flex: none;
+            object-fit: contain
+        }
+
+        .am {
+            flex: 1;
+            min-height: 0
+        }
+
+        .am .s {
+            background: #d9eefa;
+            border-radius: 4px;
+            padding: 6px;
+            flex: 1
+        }
+
+        .am .u {
+            background: #eadcf8;
+            border-radius: 4px;
+            padding: 6px;
+            flex: 1
+        }
+    </style>
+</head>
+
+<body>
+    <div id="stage">
+        <div class="wrap">
+            <div>
+                <div class="ph" id="nav-dashboards" style="height:34px;margin-bottom:5px">[ Dashboard navigation
+                    placeholder ]</div>
+                <h1>Miranda Ave Dashboard</h1>
+                <div class="sub"></div>
+
+            </div>
+            <div class="kpis">
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/01_KPI_Sand_Hill_Prestige_Star.png" alt="">
+                    <div><b>2</b><span>Residential Programs</span></div>
+                </div>
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/02_KPI_Total_Units_Building.png" alt="">
+                    <div><b>920</b><span>Total Units</span></div>
+                </div>
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/03_KPI_Program_Mix_Pie_Chart.png" alt="">
+                    <div><b>13.0%/87.0%</b><span>Low-Rise / <br/>Standard Luxury</span></div>
+                </div>
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/04_KPI_Average_Unit_Size_Ruler.png" alt="">
+                    <div><b>875 SF</b><span>Avg. Unit Size</span></div>
+                </div>
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/05_KPI_Average_Rent_Dollar_Coin.png" alt="">
+                    <div><b>$5,385</b><span>Avg. Asking Rent</span></div>
+                </div>
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/06_KPI_Rent_Per_SF_Bar_Chart.png" alt="">
+                    <div><b>$6.15</b><span>Avg. $/SF</span></div>
+                </div>
+                 <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/06_KPI_Rent_Per_SF_Bar_Chart.png" alt="">
+                    <div><b>$6.15</b><span>Avg. $/SF</span></div>
+                </div>
+            </div>
+            <div class="dashboard-content">
+            <div class="card">
+                <div class="row">
+                    <div style="flex:1.05">
+                        <div class="hd "><em>1</em>Site Overview</div>
+                        <h3>Strengths &amp; Opportunities</h3>
+                        <div class="it"><img src="SLAC_Dashboard_Individual_Icons/38_Site_Employment_Corridor_Trophy.png" alt="">
+                            <div><b>Seclusion Within an Active Employment Corridor</b>The site sits directly across from
+                                several major technology headquarters, including Google's Palo Alto offices and VMware,
+                                and is within minutes of Stanford Research Park, appealing to high-income renters who
+                                value an easy commute while avoiding the noise and density typically associated with
+                                office districts.</div>
+                        </div>
+                        <div class="it"><img src="SLAC_Dashboard_Individual_Icons/08_Site_Employment_People.png" alt="">
+                            <div><b>Strong Public School District</b>Assigned schools include Barron Park Elementary,
+                                Ellen Fletcher Middle School, and Henry M. Gunn High School, all highly rated public
+                                schools and a meaningful draw for older professionals and households with children.
+                            </div>
+                        </div>
+                        <div class="it"><img src="SLAC_Dashboard_Individual_Icons/39_Site_Placemaking_Leaf.png" alt="">
+                            <div><b>Opportunity for Placemaking</b>The vacancy of the Miranda Avenue site creates a
+                                clean-slate development opportunity for deliberate decisions about architecture,
+                                amenities, landscaping, and community programming tailored to the target renter profile.
+                            </div>
+                        </div>
+                        <h3 class="r">Challenges &amp; Considerations</h3>
+                        <div class="it"><img src="SLAC_Dashboard_Individual_Icons/40_Challenge_Limited_Walkability_Warning.png" alt="">
+                            <div><b>Limited Walkability</b>The site sits in an auto-oriented office park environment
+                                with minimal pedestrian infrastructure and no walkable retail or dining in the immediate
+                                vicinity.</div>
+                        </div>
+                        <div class="it"><img src="SLAC_Dashboard_Individual_Icons/41_Challenge_Unproven_Market_Bar_Chart.png" alt="">
+                            <div><b>Unproven Rental Market Context</b>Miranda Avenue does not have an established rental
+                                residential identity, so the development will need to build its own reputation and sense
+                                of place.</div>
+                        </div>
+                    </div>
+                    <div style="flex:1.1;display:flex;flex-direction:column">
+                        <div
+                            style="text-align:center;font-weight:700;color:var(--navy);font-size:12px;margin:2px 0 6px">
+                            Miranda Ave Site and Surroundings</div>
+                        <div class="ph" id="map-site" style="flex:1;min-height:340px">[ Site map placeholder ]</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="hd "><em>2</em>Development Area / Typology Overview</div>
+                <div class="row">
+                    <div style="width:495px;position:relative">
+                        <div class="ph" id="map-dev" style="height:250px">[ Development area map
+                            placeholder ]</div>
+                        <div class="ph" id="map-key"
+                            style="position:absolute;left:10px;top:10px;width:120px;height:55px;background:#f1eee8">[
+                            Map key placeholder ]</div>
+                    </div>
+                    <div style="flex:1">
+                        <div class="pill">Two complementary residential programs</div>
+                        <ul>
+                            <li>Recommend two residential components with distinct programming to capture different
+                                market segments.</li>
+                            <li><b class="n">Low-Rise:</b> Four acres of low-density apartments totaling ~120 units.
+                            </li>
+                            <li><b class="n">Standard Luxury:</b> Phased development of ~800 luxury apartments on the
+                                northwest portion of the site.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:10px">
+                <div class="card renter-profile-card" style="flex:1;margin:0">
+                    <div class="hd"><em>3</em>Renter Profile</div>
+                    <div class="profile-columns" style="grid-template-columns:1fr">
+                        <div class="profile-block">
+                            <div class="profile-panels">
+                                <div class="profile-panel">
+                                    <b>Low-Rise</b>
+                                    <p class="profile-detail"><img src="SLAC_Dashboard_Individual_Icons/14_Standard_Luxury_Renter_Profile_People.png" alt=""><span><b>Audience:</b> Established Professionals, Families, and Empty Nesters &amp; Downsizers</span></p>
+                                    <p class="profile-detail"><img src="SLAC_Dashboard_Individual_Icons/15_Standard_Luxury_Income_Dollar.png" alt=""><span><b>Financial Status:</b> $250,000–$500,000+</span></p>
+                                    <p class="profile-detail"><img src="SLAC_Dashboard_Individual_Icons/16_Standard_Luxury_Motivation_Target.png" alt=""><span><b>Motivation:</b> Safety, privacy, green space, larger floor plans, low-maintenance living</span></p>
+                                </div>
+                                <div class="profile-panel purple">
+                                    <b>Standard Luxury</b>
+                                    <p class="profile-detail"><img src="SLAC_Dashboard_Individual_Icons/14_Standard_Luxury_Renter_Profile_People.png" alt=""><span><b>Audience:</b> Young Professionals, Established Professionals, and Empty Nesters &amp; Downsizers</span></p>
+                                    <p class="profile-detail"><img src="SLAC_Dashboard_Individual_Icons/15_Standard_Luxury_Income_Dollar.png" alt=""><span><b>Financial Status:</b> $150,000–$350,000+</span></p>
+                                    <p class="profile-detail"><img src="SLAC_Dashboard_Individual_Icons/16_Standard_Luxury_Motivation_Target.png" alt=""><span><b>Motivation:</b> Proximity to employment, modern amenities, convenience, and green space</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card renter-profile-card" style="flex:1;margin:0">
+                    <div class="hd"><em>4</em>Typology / Positioning &amp; Rationale</div>
+                    <div class="profile-columns" style="grid-template-columns:1fr 1fr">
+                        <div class="profile-block" style="background:#d9eefa;border-radius:6px;padding:10px">
+                            <h3>Typology / Positioning</h3>
+                            <div class="positioning-copy"><img src="SLAC_Dashboard_Individual_Icons/13_Positioning_Low_Rise_Building.png" alt=""><span>Recommend a mixed low-rise and Standard Luxury program emphasizing seclusion, school-district appeal, green space, and proximity to employment.</span></div>
+                        </div>
+                        <div class="profile-block" style="background:#eadcf8;border-radius:6px;padding:10px">
+                            <h3>Positioning Rationale</h3>
+                            <div class="positioning-copy"><img src="SLAC_Dashboard_Individual_Icons/20_Positioning_Rationale_Target.png" alt=""><span>The site is positioned to appeal to the Palo Alto employee base seeking proximity to employment in a quieter, lower-density residential setting. Low-Rise units emphasize space and privacy, while Standard Luxury units provide a lower monthly entry point.</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card amenity-card" style="flex:1;margin:0">
+                    <div class="hd"><em>5</em>Amenities</div>
+                    <div class="row am">
+                        <div class="s">
+                            <h4>Low-Rise</h4>
+                            <p><img src="SLAC_Dashboard_Individual_Icons/47_Amenity_Durable_Finishes.png" alt="">High-quality unit finishes</p>
+                            <p><img src="SLAC_Dashboard_Individual_Icons/23_Standard_Luxury_Outdoor_Tree.png" alt="">Focused core amenities</p>
+                            <p><img src="SLAC_Dashboard_Individual_Icons/42_Amenity_Open_Space_Sprout.png" alt="">Ample landscaped open space</p>
+                            <p><img src="SLAC_Dashboard_Individual_Icons/22_Standard_Luxury_Coworking_People.png" alt="">Resident recreation and gathering areas</p>
+                            <p><img src="SLAC_Dashboard_Individual_Icons/25_Standard_Luxury_Resident_Services_Star.png" alt="">Limited resident services</p>
+                        </div>
+                        <div class="u">
+                            <h4>Standard Luxury</h4>
+                            <p><img src="SLAC_Dashboard_Individual_Icons/35_Amenity_Elevated_Crown.png" alt="">Full market-standard amenity package</p>
+                            <p><img src="SLAC_Dashboard_Individual_Icons/43_Amenity_Resort_Pool_Waves.png" alt="">Resort-style pool and courtyard</p>
+                            <p><img src="SLAC_Dashboard_Individual_Icons/21_Standard_Luxury_Fitness_Dumbbell.png" alt="">Expanded fitness studio</p>
+                            <p><img src="SLAC_Dashboard_Individual_Icons/44_Amenity_Club_Lounge_Martini.png" alt="">Club lounge</p>
+                            <p><img src="SLAC_Dashboard_Individual_Icons/25_Standard_Luxury_Resident_Services_Star.png" alt="">Select resident services</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="card" style="flex:1">
+                    <div class="hd "><em>6</em>Rents &amp; Program Mix</div>
+                    <table class="">
+                        <tr>
+                            <th>Program</th>
+                            <th>Units</th>
+                            <th>Mix</th>
+                            <th>Avg. Unit Size (SF)</th>
+                            <th>Asking Rent</th>
+                            <th>Avg. $/SF</th>
+                        </tr>
+                        <tr class="bl">
+                            <td>Low-Rise</td>
+                            <td>120</td>
+                            <td>13.0%</td>
+                            <td>1,195</td>
+                            <td>$6,679</td>
+                            <td>$5.59</td>
+                        </tr>
+                        <tr class="pu">
+                            <td>Standard Luxury</td>
+                            <td>800</td>
+                            <td>87.0%</td>
+                            <td>828</td>
+                            <td>$5,191</td>
+                            <td>$6.27</td>
+                        </tr>
+                        <tr class="ye">
+                            <td>Total / Average</td>
+                            <td>920</td>
+                            <td>100.0%</td>
+                            <td>875</td>
+                            <td>$5,385</td>
+                            <td>$6.15</td>
+                        </tr>
+                    </table>
+                    <div style="height:6px"></div>
+                    <table class="">
+                        <tr>
+                            <th>Unit Type</th>
+                            <th>Units</th>
+                            <th>Mix</th>
+                            <th>Avg. Unit Size (SF)</th>
+                            <th>Asking Rent</th>
+                            <th>Avg. $/SF</th>
+                        </tr>
+                        <tr class="bl">
+                            <td>1BR Low-Rise</td>
+                            <td>12</td>
+                            <td>1.3%</td>
+                            <td>850</td>
+                            <td>$5,100</td>
+                            <td>$6.00</td>
+                        </tr>
+                        <tr class="bl">
+                            <td>1BR+ Low-Rise</td>
+                            <td>18</td>
+                            <td>2.0%</td>
+                            <td>1,000</td>
+                            <td>$5,470</td>
+                            <td>$5.47</td>
+                        </tr>
+                        <tr class="bl">
+                            <td>2BR Low-Rise</td>
+                            <td>66</td>
+                            <td>7.2%</td>
+                            <td>1,200</td>
+                            <td>$6,585</td>
+                            <td>$5.49</td>
+                        </tr>
+                        <tr class="bl">
+                            <td>3BR Low-Rise</td>
+                            <td>24</td>
+                            <td>2.6%</td>
+                            <td>1,500</td>
+                            <td>$8,635</td>
+                            <td>$5.76</td>
+                        </tr>
+                        <tr class="ye">
+                            <td>LOW-RISE / AVG.</td>
+                            <td>120</td>
+                            <td>13.0%</td>
+                            <td>1,195</td>
+                            <td>$6,679</td>
+                            <td>$5.59</td>
+                        </tr>
+                        <tr class="pu">
+                            <td>Studio Standard Luxury</td>
+                            <td>80</td>
+                            <td>8.7%</td>
+                            <td>525</td>
+                            <td>$3,840</td>
+                            <td>$7.31</td>
+                        </tr>
+                        <tr class="pu">
+                            <td>Jr. 1BR Standard Luxury</td>
+                            <td>40</td>
+                            <td>4.3%</td>
+                            <td>575</td>
+                            <td>$4,180</td>
+                            <td>$7.27</td>
+                        </tr>
+                        <tr class="pu">
+                            <td>1BR Standard Luxury</td>
+                            <td>360</td>
+                            <td>39.1%</td>
+                            <td>725</td>
+                            <td>$4,695</td>
+                            <td>$6.48</td>
+                        </tr>
+                        <tr class="pu">
+                            <td>1BR+ Standard Luxury</td>
+                            <td>80</td>
+                            <td>8.7%</td>
+                            <td>775</td>
+                            <td>$5,035</td>
+                            <td>$6.50</td>
+                        </tr>
+                        <tr class="pu">
+                            <td>2BR Standard Luxury</td>
+                            <td>160</td>
+                            <td>17.4%</td>
+                            <td>1,100</td>
+                            <td>$6,305</td>
+                            <td>$5.73</td>
+                        </tr>
+                        <tr class="pu">
+                            <td>2BR+ Standard Luxury</td>
+                            <td>40</td>
+                            <td>4.3%</td>
+                            <td>1,150</td>
+                            <td>$6,665</td>
+                            <td>$5.79</td>
+                        </tr>
+                        <tr class="pu">
+                            <td>3BR Standard Luxury</td>
+                            <td>40</td>
+                            <td>4.3%</td>
+                            <td>1,300</td>
+                            <td>$7,755</td>
+                            <td>$5.97</td>
+                        </tr>
+                        <tr class="ye">
+                            <td>STANDARD LUXURY / AVG.</td>
+                            <td>800</td>
+                            <td>87.0%</td>
+                            <td>828</td>
+                            <td>$5,191</td>
+                            <td>$6.27</td>
+                        </tr>
+                        <tr class="ye">
+                            <td>TOTAL / AVG.</td>
+                            <td>920</td>
+                            <td>100.0%</td>
+                            <td>875</td>
+                            <td>$5,385</td>
+                            <td>$6.15</td>
+                        </tr>
+                    </table>
+                    <div class="eco-note">Note for project economics</div>
+                </div>
+                <div style="flex:1.05;display:flex;flex-direction:column;gap:5px">
+                    <div class="card">
+                        <div class="hd "><em>7</em>Residential Project Economics</div>
+                        <table class="eco">
+                            <tr>
+                                <th style="background:none"></th>
+                                <th class="lb">Low-Rise<br>(120 units)</th>
+                                <th class="lp">Standard Luxury<br>(800 units)</th>
+                            </tr>
+                            <tr>
+                                <td>Units</td>
+                                <td>120</td>
+                                <td>800</td>
+                            </tr>
+                            <tr>
+                                <td>NOI</td>
+                                <td>$5,670,000</td>
+                                <td>$33,720,000</td>
+                            </tr>
+                            <tr>
+                                <td>Cap Rate</td>
+                                <td>4.50%</td>
+                                <td>4.50%</td>
+                            </tr>
+                            <tr>
+                                <td>Stabilized Apartment Market Value</td>
+                                <td>$125,920,000</td>
+                                <td>$749,410,000</td>
+                            </tr>
+                            <tr>
+                                <td class="i">Market Value / Unit</td>
+                                <td>$1,050,000</td>
+                                <td>$940,000</td>
+                            </tr>
+                            <tr>
+                                <td>YOC</td>
+                                <td>5.50%</td>
+                                <td>5.50%</td>
+                            </tr>
+                            <tr>
+                                <td>Max Development Costs (incl. Land)</td>
+                                <td>$103,030,000</td>
+                                <td>$613,160,000</td>
+                            </tr>
+                            <tr>
+                                <td class="i">Max Costs / Unit</td>
+                                <td>$858,583</td>
+                                <td>$766,450</td>
+                            </tr>
+                            <tr>
+                                <td>Est. Development Costs (excl. Land)</td>
+                                <td>$61,930,000</td>
+                                <td>$503,900,000</td>
+                            </tr>
+                            <tr>
+                                <td class="i">Est. Costs / Unit</td>
+                                <td>$516,083</td>
+                                <td>$629,875</td>
+                            </tr>
+                            <tr>
+                                <td>Residual Land Value</td>
+                                <td>$40,800,000</td>
+                                <td>$112,000,000</td>
+                            </tr>
+                            <tr>
+                                <td class="i">RLV / Unit</td>
+                                <td>$340,000</td>
+                                <td>$140,000</td>
+                            </tr>
+                            <tr>
+                                <td class="i">RLV / Acre</td>
+                                <td>$10,270,000</td>
+                                <td>$13,660,000</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="box tan">
+                        <h3 style="color:var(--navy);font-size:13px"><img class="hd-icon" src="SLAC_Dashboard_Individual_Icons/37_Timing_Partnership_Handshake.png" alt="">TIMING / PARTNERSHIPS</h3>
+                        <ul style="margin-top:6px">
+                            <li><b class="n">Near- to Medium-Term Opportunity:</b> Strong multifamily fundamentals and
+                                vacant space support development at Miranda, though active leases and ongoing marketing
+                                may require phased delivery.</li>
+                            <li><b class="n">Early Partnership Encouraged:</b> Engage development partners early, likely
+                                during the pre-entitlement stage; a JV would allow Stanford to maintain control and
+                                upside, while a long-term ground lease can provide stable cash flow and execution risk
+                                transfer.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="hd "><em>8</em>key Project Economic Inputs</div>
+                <table class="">
+                    <tr>
+                        <th>Product Type</th>
+                        <th>Net SF / Unit</th>
+                        <th>Efficiency</th>
+                        <th>Units / Acre</th>
+                        <th>Avg. Rent $ / SF / Mo</th>
+                        <th>Other Income</th>
+                        <th>Occupancy</th>
+                        <th>Operating Expenses</th>
+                        <th>Base Cap Rate</th>
+                        <th>Hard Costs</th>
+                        <th>Soft Costs (% of Hard)</th>
+                        <th>Financing Cost</th>
+                        <th>Parking Cost / Space</th>
+                        <th>Parking Spaces</th>
+                    </tr>
+                    <tr class="bl">
+                        <td>Miranda – Low-Rise</td>
+                        <td>1,195</td>
+                        <td>85%</td>
+                        <td>30 / ac</td>
+                        <td>$5.20</td>
+                        <td>3%</td>
+                        <td>95%</td>
+                        <td>35%</td>
+                        <td>4.50%</td>
+                        <td>$265 / gsf</td>
+                        <td>20%</td>
+                        <td>5%</td>
+                        <td>$10,000</td>
+                        <td>1.75</td>
+                    </tr>
+                    <tr class="pu">
+                        <td>Miranda – Standard Luxury</td>
+                        <td>828</td>
+                        <td>80%</td>
+                        <td>100 / ac</td>
+                        <td>$5.94</td>
+                        <td>8%</td>
+                        <td>95%</td>
+                        <td>30%</td>
+                        <td>4.50%</td>
+                        <td>$410 / gsf</td>
+                        <td>20%</td>
+                        <td>5%</td>
+                        <td>$40,000</td>
+                        <td>1.30</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="card">
+                <div class="hd">Appendix</div>
+            </div>
+        </div>
+    </div>
+        </div>
+</body>
+
+</html>

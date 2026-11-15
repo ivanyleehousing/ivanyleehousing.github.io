@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>SLAC Housing Phase 2 Dashboard</title>
+    <style>
+        :root {
+            --bg: #f3efe8;
+            --card: #faf8f4;
+            --navy: #14213d;
+            --red: #a8142f;
+            --gold: #b08d57;
+            --blue: #d9eefa;
+            --purple: #eadcf8;
+            --line: #d8d2c6
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg)
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #555;
+            font-size: 12px;
+            line-height: 1.35
+        }
+
+        #stage {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1250px;
+            height: 1935px
+        }
+
+        .wrap {
+            width: 1250px;
+            height: 1935px;
+            padding: 14px;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow: hidden
+        }
+
+        .masthead {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px
+        }
+
+        h1 {
+            color: var(--navy);
+            font-size: 36px;
+            font-weight: 800;
+            line-height: 1
+        }
+
+        .sub {
+            margin-top: 4px;
+            color: #666;
+            font-size: 16px
+        }
+
+        .brand {
+            min-width: 190px;
+            padding: 4px 0 4px 14px;
+            border-left: 1px solid #aaa;
+            color: var(--navy)
+        }
+
+        .brand b {
+            display: block;
+            font-size: 20px
+        }
+
+        .brand span {
+            display: block;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: .5px
+        }
+
+        .kpis {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px
+        }
+
+        .kpi {
+            min-height: 72px;
+            padding: 8px 10px;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            border-radius: 6px;
+            background: #fff
+        }
+
+        .kpi img {
+            width: 34px;
+            height: 34px;
+            flex: none;
+            object-fit: contain
+        }
+
+        .kpi b {
+            display: block;
+            color: var(--red);
+            font-size: 17px
+        }
+
+        .kpi span {
+            color: var(--navy);
+            font-size: 10.5px;
+            line-height: 1.2
+        }
+
+        .dashboard-content {
+            flex: 1;
+            min-height: 0;
+            display: grid;
+            grid-template-rows: 1.02fr .92fr .88fr 1.9fr;
+            gap: 8px
+        }
+
+        .row {
+            min-height: 0;
+            display: flex;
+            gap: 8px
+        }
+
+        .analysis-layout {
+            min-height: 0;
+            display: flex;
+            gap: 8px
+        }
+
+        .analysis-column {
+            flex: 1;
+            min-width: 0;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px
+        }
+
+        .card {
+            min-width: 0;
+            min-height: 0;
+            padding: 10px;
+            overflow: hidden;
+            border-radius: 6px;
+            background: #fff
+        }
+
+        .profile,
+        .amenities,
+        .rent-card,
+        .eco-card,
+        .bottom-left,
+        .bottom-right {
+            background: #fff
+        }
+
+        .hd {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            color: var(--navy);
+            font-size: 15px;
+            font-weight: 800;
+            text-transform: uppercase
+        }
+
+        .hd em {
+            width: 22px;
+            height: 22px;
+            flex: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--red);
+            color: #fff;
+            font-size: 12px;
+            font-style: normal
+        }
+
+        h3 {
+            margin: 4px 0;
+            color: var(--gold);
+            font-size: 13px
+        }
+
+        h3.r {
+            color: var(--red)
+        }
+
+        .item {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 6px
+        }
+
+        .item img {
+            width: 26px;
+            height: 26px;
+            flex: none;
+            object-fit: contain
+        }
+
+        .item b {
+            display: block;
+            color: var(--navy);
+            font-size: 12.5px
+        }
+
+        .ph {
+            min-width: 0;
+            min-height: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            background: #e6e2da;
+            color: #8d8678;
+            font-size: 12px;
+            text-align: center
+        }
+
+        .site-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column
+        }
+
+        .site-card .ph {
+            flex: 1
+        }
+
+        .parcel {
+            flex: 1;
+            display: flex;
+            flex-direction: column
+        }
+
+        .parcel-body {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            gap: 8px
+        }
+
+        .parcel-map {
+            position: relative;
+            flex: 1.2
+        }
+
+        .parcel-map .ph {
+            width: 100%;
+            height: 100%
+        }
+
+        .parcel-info {
+            flex: 1;
+            padding: 7px;
+            border-radius: 4px;
+            background: #f5f2ec
+        }
+
+        .parcel-info b {
+            display: block;
+            margin-bottom: 3px;
+            color: #222;
+            font-size: 10.5px
+        }
+
+        ul {
+            list-style: none
+        }
+
+        li {
+            position: relative;
+            margin-bottom: 3px;
+            padding-left: 13px
+        }
+
+        li:before {
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: #9a9285;
+            content: "•"
+        }
+
+        .parcel-note {
+            margin-top: 5px;
+            border-top: 1px solid #d5d0c7;
+            padding-top: 5px;
+            font-size: 9.5px
+        }
+
+        .profile {
+            flex: 1;
+            display: flex;
+            flex-direction: column
+        }
+
+        .amenities {
+            flex: 1;
+            display: flex;
+            flex-direction: column
+        }
+
+        .profile-columns {
+            flex: 1;
+            display: grid;
+            grid-template-columns: .8fr 1.75fr 1.1fr;
+            gap: 8px
+        }
+
+        .profile-block {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100%
+        }
+
+        .profile-block h3 {
+            font-size: 13px
+        }
+
+        .profile-panels {
+            display: flex;
+            gap: 6px;
+            flex: 1;
+            min-height: 0;
+            height: 100%
+        }
+
+        .profile-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 7px;
+            border-radius: 4px;
+            background: var(--blue);
+            font-size: 9.5px;
+            min-height: 0
+        }
+
+        .profile-panel.purple {
+            background: var(--purple)
+        }
+
+        .profile-panel b {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--navy);
+            font-size: 12px
+        }
+
+        .profile-panel p {
+            margin-top: 4px;
+            font-size: 12px
+        }
+
+        .profile-detail {
+            display: flex;
+            align-items: flex-start;
+            gap: 5px;
+            margin-top: 4px
+        }
+
+        .profile-detail img {
+            width: 19px;
+            height: 19px;
+            flex: none;
+            object-fit: contain
+        }
+
+        .positioning-copy {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px
+        }
+
+        .positioning-copy img {
+            width: 30px;
+            height: 30px;
+            flex: none;
+            object-fit: contain
+        }
+
+        .amenity-columns {
+            flex: 1;
+            display: flex;
+            gap: 7px
+        }
+
+        .amenity-group {
+            flex: 1;
+            padding: 7px;
+            border-radius: 4px;
+            background: var(--blue)
+        }
+
+        .amenity-group.purple {
+            background: var(--purple)
+        }
+
+        .amenity-group h3 {
+            margin: 0 0 5px;
+            color: var(--navy);
+            font-size: 14px
+        }
+
+        .amenity-group li {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 5px;
+            padding-left: 0;
+            font-size: 12px
+        }
+
+        .amenity-group li:before {
+            content: none
+        }
+
+        .amenity-group li img {
+            width: 22px;
+            height: 22px;
+            flex: none;
+            object-fit: contain
+        }
+
+        .hd-icon {
+            width: 22px;
+            height: 22px;
+            object-fit: contain
+        }
+
+        .rent-card {
+            flex: 1.4;
+            display: flex;
+            flex-direction: column
+        }
+
+        .eco-card {
+            flex: 1.6;
+            display: flex;
+            flex-direction: column
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9.5px
+        }
+
+        th,
+        td {
+            padding: 3px 4px;
+            border-bottom: 1px solid #fff;
+            text-align: center
+        }
+
+        th:first-child,
+        td:first-child {
+            text-align: left
+        }
+
+        th {
+            background: #4a5568;
+            color: #fff;
+            font-size: 9px
+        }
+
+        td {
+            background: #f1eee8
+        }
+
+        .blue td {
+            background: #e3f2fb
+        }
+
+        .purple-row td {
+            background: #efe3fa
+        }
+
+        .gold-row td {
+            background: #fbe9b4;
+            font-weight: 700
+        }
+
+        .mix-title {
+            margin: 5px 0 3px;
+            padding: 3px 5px;
+            background: #2f3a4f;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700
+        }
+
+        .mix-table {
+            font-size: 8.5px
+        }
+
+        .mix-table th {
+            padding: 2px 3px;
+            font-size: 8px
+        }
+
+        .mix-table td {
+            padding: 2px 3px
+        }
+
+        .mix-table tr.standard td {
+            background: #e3f2fb
+        }
+
+        .mix-table tr.ultra td {
+            background: #efe3fa
+        }
+
+        .eco th {
+            font-size: 9px
+        }
+
+        .eco td {
+            padding: 4px 5px;
+            border-bottom: 1px solid #ddd
+        }
+
+        .eco th + th {
+            border-left: 1px solid rgba(20, 33, 61, .25)
+        }
+
+        .eco td + td {
+            border-left: 1px solid #ddd
+        }
+
+        .eco td:first-child {
+            width: 45%
+        }
+
+        .eco-note {
+            background: #f3ead8;
+            border-radius: 4px;
+            padding: 4px 6px;
+            font-size: 9.5px;
+            font-style: italic;
+            margin-top: 4px
+        }
+
+        .bottom-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column
+        }
+
+        .bottom-right {
+            flex: .8;
+            display: flex;
+            flex-direction: column
+        }
+
+        .case-studies {
+            flex: 1;
+            display: flex;
+            gap: 8px
+        }
+
+        .case {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            gap: 7px;
+            font-size: 9.5px
+        }
+
+        .case .ph {
+            width: 110px;
+            flex: none
+        }
+
+        .case b {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--navy);
+            font-size: 10px
+        }
+
+        .inputs th {
+            font-size: 8px
+        }
+
+        .inputs td {
+            font-size: 9px
+        }
+
+        .source {
+            margin-top: 5px;
+            color: #777;
+            font-size: 9px
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="stage">
+        <div class="wrap">
+            <div class="ph" style="height:34px;flex:none">[ Dashboard navigation placeholder ]</div>
+            <header class="masthead">
+                <div>
+                    <h1>SLAC Housing Phase 2 Dashboard</h1>
+                    <div class="sub"></div>
+                </div>
+                <div class="brand"><b>SLAC</b><span>NATIONAL ACCELERATOR<br>LABORATORY</span></div>
+            </header>
+
+            <div class="kpis">
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/01_KPI_Sand_Hill_Prestige_Star.png" alt=""><div><b>25%</b><span>Sand Hill Road Premium</span></div></div>
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/02_KPI_Total_Units_Building.png" alt=""><div><b>630</b><span>Total Units</span></div></div>
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/03_KPI_Program_Mix_Pie_Chart.png" alt=""><div><b>66.7%/33.3%</b><span>Standard Luxury / <br/> Ultra-Luxury</span></div></div>
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/04_KPI_Average_Unit_Size_Ruler.png" alt=""><div><b>1,210 SF</b><span>Avg. Unit Size</span></div></div>
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/05_KPI_Average_Rent_Dollar_Coin.png" alt=""><div><b>$10,495</b><span>Avg. Asking Rent</span></div></div>
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/06_KPI_Rent_Per_SF_Bar_Chart.png" alt=""><div><b>$8.67</b><span>Avg. $/SF</span></div></div>
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/06_KPI_Rent_Per_SF_Bar_Chart.png" alt=""><div><b>$8.67</b><span>Avg. $/SF</span></div></div>
+            </div>
+
+            <main class="dashboard-content">
+                <div class="row">
+                    <section class="card" style="flex:1">
+                        <div class="hd"><em>1</em>Site Overview</div>
+                        <h3>Strengths &amp; Opportunities</h3>
+                        <div class="item"><img src="SLAC_Dashboard_Individual_Icons/07_Site_Prestige_Star.png" alt=""><div><b>Sand Hill Road prestige and luxury address</b>Globally recognized address associated with wealth, privacy and exclusivity. Meaningful marketing asset.</div></div>
+                        <div class="item"><img src="SLAC_Dashboard_Individual_Icons/08_Site_Employment_People.png" alt=""><div><b>Proximity to major employment centers</b>Minutes to Stanford, top VC firms, private equity offices, and tech headquarters. Supports strong renter demand.</div></div>
+                        <div class="item"><img src="SLAC_Dashboard_Individual_Icons/09_Site_Seclusion_Tree.png" alt=""><div><b>Seclusion and exclusivity</b>Large federal research campus with substantial privacy and separation from neighboring development.</div></div>
+                        <h3 class="r">Challenges &amp; Considerations</h3>
+                        <div class="item"><img src="SLAC_Dashboard_Individual_Icons/10_Site_Development_Restrictions_Civic_Building.png" alt=""><div><b>Development restrictions</b>Active federal research facility with constraints on what can be built and sensitivity to ongoing operations.</div></div>
+                        <div class="item"><img src="SLAC_Dashboard_Individual_Icons/11_Site_Coordination_Gear.png" alt=""><div><b>Need close coordination</b>Requires coordination with SLAC, DOE and other stakeholders throughout design and entitlement.</div></div>
+                        <div class="item"><img src="SLAC_Dashboard_Individual_Icons/12_Site_Transportation_Car.png" alt=""><div><b>Limited pedestrian ecosystem</b>Virtually no walkable retail or dining; likely auto-oriented living, offset by high-end services and concierge programming.</div></div>
+                    </section>
+                    <section class="card site-card">
+                        <div class="hd">SLAC Site and Surroundings</div>
+                        <div class="ph">[ Site map placeholder ]</div>
+                    </section>
+                </div>
+
+                <section class="card parcel">
+                    <div class="hd"><em>2</em>Parcel Details</div>
+                    <div class="row" style="flex:1">
+                        <div class="parcel">
+                            <div class="parcel-body">
+                                <div class="parcel-map">
+                                    <div class="ph">[ Parcel A map placeholder ]</div>
+                                </div>
+                                <div class="parcel-info">
+                                    <b>Parcel A &nbsp; Approx. 11.7 acres</b>
+                                    <b>Current parcel-specific detail available:</b>
+                                    <ul>
+                                        <li>Approx. 11.7 acres</li>
+                                        <li>Northwestern perimeter / Phase 1 area</li>
+                                        <li>Relatively ground lease</li>
+                                        <li>Setbacks / developable area</li>
+                                        <li>Terrain generally more flatter and slower portions (blended on slope map)</li>
+                                    </ul>
+                                    <div class="parcel-note"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="parcel">
+                            <div class="parcel-body">
+                                <div class="parcel-map">
+                                    <div class="ph">[ Parcel B map placeholder ]</div>
+                                </div>
+                                <div class="parcel-info">
+                                    <b>Parcel B &nbsp; Approx. 10.3 acres</b>
+                                    <b>Current parcel-specific detail available:</b>
+                                    <ul>
+                                        <li>Approx. 10.3 acres</li>
+                                        <li>North of the Guest House along Sand Hill Road</li>
+                                        <li>Development opportunity within the SLAC / landholdings</li>
+                                        <li>Terrain generally more flatter and slower portions (blended on slope map)</li>
+                                    </ul>
+                                    <div class="parcel-note"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="row">
+                    <section class="card profile" style="flex:1">
+                        <div class="hd"><em>3</em>Renter Profile</div>
+                        <div class="profile-columns" style="grid-template-columns: 1fr; height: 100%;">
+                            <div class="profile-block" style="height:100%;">
+                                
+                                <div class="profile-panels" style="height:100%;">
+                                    <div class="profile-panel">
+                                        <b>Standard Luxury</b>
+                                        <div class="profile-detail"><img src="SLAC_Dashboard_Individual_Icons/14_Standard_Luxury_Renter_Profile_People.png" alt=""><p>Young professionals, established professionals.</p></div>
+                                        <div class="profile-detail"><img src="SLAC_Dashboard_Individual_Icons/15_Standard_Luxury_Income_Dollar.png" alt=""><p><strong>$250,000 – $350,000</strong> income</p></div>
+                                        <div class="profile-detail"><img src="SLAC_Dashboard_Individual_Icons/16_Standard_Luxury_Motivation_Target.png" alt=""><p>Prestige of address, proximity to employment, modern amenities, high-quality finishes, quiet alternative to urban product.</p></div>
+                                    </div>
+                                    <div class="profile-panel purple">
+                                        <b>Ultra-Luxury</b>
+                                        <div class="profile-detail"><img src="SLAC_Dashboard_Individual_Icons/17_Ultra_Luxury_Renter_Profile_People.png" alt=""><p>Established professionals, senior academics, empty nesters / downsizers.</p></div>
+                                        <div class="profile-detail"><img src="SLAC_Dashboard_Individual_Icons/18_Ultra_Luxury_Income_Dollar.png" alt=""><p><strong>$300,000 – $750,000+</strong> income or substantial net worth</p></div>
+                                        <div class="profile-detail"><img src="SLAC_Dashboard_Individual_Icons/19_Ultra_Luxury_Motivation_Target.png" alt=""><p>Prestige, privacy, exclusivity, low-density environment, scarcity of comparable product.</p></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="card profile" style="flex:1">
+                        <div class="hd"><em>4</em>Typology / Positioning &amp; Rationale</div>
+                        <div class="profile-columns" style="grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div class="profile-block" style="background: var(--blue); border-radius: 6px; padding: 10px; min-height: 180px;">
+                                <h3>Typology / Positioning</h3>
+                                <div class="positioning-copy"><img src="SLAC_Dashboard_Individual_Icons/13_Positioning_Low_Rise_Building.png" alt=""><span>Recommend a mixed Standard Luxury and Ultra-Luxury low-rise development to emphasize exclusivity and fit into the surroundings.</span></div>
+                            </div>
+                            <div class="profile-block" style="background: var(--purple); border-radius: 6px; padding: 10px; min-height: 180px;">
+                                <h3>Positioning Rationale</h3>
+                                <div class="positioning-copy"><img src="SLAC_Dashboard_Individual_Icons/20_Positioning_Rationale_Target.png" alt=""><span>Target rents reflect roughly a 25% site premium due to SLAC's prestige on Sand Hill Road. Standard Luxury will serve as market entry with smaller unit types, while Ultra-Luxury units are at a larger scale with elevated finishes and amenities.</span></div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="card amenities" style="flex:1">
+                        <div class="hd"><em>5</em>Amenities</div>
+                        <div class="amenity-columns">
+                            <div class="amenity-group">
+                                <h3>Standard Luxury</h3>
+                                <ul><li><img src="SLAC_Dashboard_Individual_Icons/21_Standard_Luxury_Fitness_Dumbbell.png" alt="">Fitness center</li><li><img src="SLAC_Dashboard_Individual_Icons/22_Standard_Luxury_Coworking_People.png" alt="">Co-working lounge</li><li><img src="SLAC_Dashboard_Individual_Icons/23_Standard_Luxury_Outdoor_Tree.png" alt="">Outdoor amenity spaces</li><li><img src="SLAC_Dashboard_Individual_Icons/24_Standard_Luxury_Covered_Parking_Car.png" alt="">Covered parking</li><li><img src="SLAC_Dashboard_Individual_Icons/25_Standard_Luxury_Resident_Services_Star.png" alt="">Select resident services</li></ul>
+                            </div>
+                            <div class="amenity-group purple">
+                                <h3>Ultra-Luxury</h3>
+                                <ul><li><img src="SLAC_Dashboard_Individual_Icons/26_Ultra_Luxury_Concierge_Bell.png" alt="">Concierge services</li><li><img src="SLAC_Dashboard_Individual_Icons/27_Ultra_Luxury_Private_Dining_Fork_Knife.png" alt="">Private dining / entertaining spaces</li><li><img src="SLAC_Dashboard_Individual_Icons/28_Ultra_Luxury_Wellness_Dumbbell.png" alt="">Wellness and fitness facilities</li><li><img src="SLAC_Dashboard_Individual_Icons/29_Ultra_Luxury_Secure_Parking_Car.png" alt="">Secure parking</li><li><img src="SLAC_Dashboard_Individual_Icons/30_Ultra_Luxury_Landscaping_Tree.png" alt="">Landscaped outdoor areas emphasizing privacy</li></ul>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="analysis-layout">
+                    <div class="analysis-column">
+                    <section class="card rent-card">
+                        <div class="hd"><em>6</em>Rents &amp; Program Mix</div>
+                        <table>
+                            <tr><th>Unit Type</th><th>Units</th><th>Mix</th><th>Avg. Unit Size (SF)</th><th>Asking Rent</th><th>Avg. $/SF</th></tr>
+                            <tr class="blue"><td>Standard Luxury</td><td>420</td><td>66.7%</td><td>1,195</td><td>$8,439</td><td>$7.06</td></tr>
+                            <tr class="purple-row"><td>Ultra-Luxury</td><td>210</td><td>33.3%</td><td>1,240</td><td>$14,608</td><td>$11.78</td></tr>
+                            <tr class="gold-row"><td>Total / Average</td><td>630</td><td>100.0%</td><td>1,210</td><td>$10,495</td><td>$8.67</td></tr>
+                        </table>
+                        <div class="mix-title">Unit Mix Detail</div>
+                        <table class="mix-table">
+                            <tr><th>Unit Type</th><th>Units</th><th>Mix</th><th>Avg. Unit Size (SF)</th><th>Asking Rent</th><th>Avg. $/SF</th></tr>
+                            <tr class="standard"><td>1BR Standard Luxury</td><td>63</td><td>10.0%</td><td>900</td><td>$6,760</td><td>$7.51</td></tr>
+                            <tr class="standard"><td>1BR+ Standard Luxury</td><td>63</td><td>10.0%</td><td>1,000</td><td>$7,400</td><td>$7.40</td></tr>
+                            <tr class="standard"><td>2BR Standard Luxury</td><td>168</td><td>26.7%</td><td>1,200</td><td>$8,310</td><td>$6.93</td></tr>
+                            <tr class="standard"><td>2BR+ Standard Luxury</td><td>42</td><td>6.7%</td><td>1,300</td><td>$8,920</td><td>$6.86</td></tr>
+                            <tr class="standard"><td>3BR Standard Luxury</td><td>84</td><td>13.3%</td><td>1,500</td><td>$10,495</td><td>$7.00</td></tr>
+                            <tr class="ultra"><td>1BR Ultra-Luxury</td><td>32</td><td>5.0%</td><td>950</td><td>$10,490</td><td>$11.04</td></tr>
+                            <tr class="ultra"><td>2BR Ultra-Luxury</td><td>32</td><td>5.0%</td><td>1,050</td><td>$11,790</td><td>$11.23</td></tr>
+                            <tr class="ultra"><td>2BR+ Ultra-Luxury</td><td>84</td><td>13.3%</td><td>1,250</td><td>$14,340</td><td>$11.47</td></tr>
+                            <tr class="ultra"><td>3BR Ultra-Luxury</td><td>42</td><td>3.3%</td><td>1,400</td><td>$17,720</td><td>$12.66</td></tr>
+                            <tr class="ultra"><td>4BR Ultra-Luxury</td><td>42</td><td>6.7%</td><td>1,500</td><td>$18,790</td><td>$12.53</td></tr>
+                        </table>
+                        <div class="eco-note">Note for project economics</div>
+                    </section>
+                    <section class="card bottom-left">
+                        <div class="hd"><em>8</em><img class="hd-icon" src="SLAC_Dashboard_Individual_Icons/31_Key_Lessons_Lightbulb.png" alt="">Case Studies / Lessons Learned</div>
+                        <div class="case-studies">
+                            <div class="case">
+                                <div class="ph" style="width:180px;height:130px;flex:none" >[ Image placeholder ]</div>
+                                <div><b>Verra at Harvard Enterprise Research Center<br>(Boston, MA)</b>Integrates housing directly into a mixed-use innovation ecosystem with high-end amenities tailored to the research and professional community.</div>
+                            </div>
+                            <div class="case">
+                                <div class="ph" style="width:180px;height:130px;flex:none">[ Image placeholder ]</div>
+                                <div><b>Element Collective at UW Madison Research Park<br>(Madison, WI)</b>First residential project in a research park, transforming former surface parking into an innovation district and showing demand for professionals who live, work and gather in the same environment.</div>
+                            </div>
+                        </div>
+                        <div class="source"></div>
+                    </section>
+                    </div>
+                    <div class="analysis-column">
+                    <section class="card eco-card">
+                        <div class="hd"><em>7</em>Residential Project Economics</div>
+                        <table class="eco">
+                            <tr><th></th><th>Standard Luxury<br>(420 units)</th><th>Ultra-Luxury<br>(210 units)</th></tr>
+                            <tr><td>NOI</td><td>$24,660,000</td><td>$18,630,000</td></tr>
+                            <tr><td>Cap Rate</td><td>4.50%</td><td>4.50%</td></tr>
+                            <tr><td>Stabilized Apartment Market Value</td><td>$548,020,000</td><td>$414,090,000</td></tr>
+                            <tr><td>Market Value / Unit</td><td>$1,300,000</td><td>$1,970,000</td></tr>
+                            <tr><td>YOC</td><td>5.50%</td><td>5.50%</td></tr>
+                            <tr><td>Max Development Costs (incl. Land)</td><td>$448,380,000</td><td>$338,800,000</td></tr>
+                            <tr><td>Max Costs / Unit</td><td>$1,067,571</td><td>$1,613,333</td></tr>
+                            <tr><td>Est. Development Costs (excl. Land)</td><td>$216,740,000</td><td>$134,560,000</td></tr>
+                            <tr><td>Est. Cost / Unit</td><td>$516,048</td><td>$640,762</td></tr>
+                            <tr><td>Residual Land Value</td><td>$231,000,000</td><td>$203,700,000</td></tr>
+                            <tr><td>RLV / Unit</td><td>$550,000</td><td>$970,000</td></tr>
+                            <tr><td>RLV / Acre</td><td>$16,550,000</td><td>$29,180,000</td></tr>
+                        </table>
+                        <div class="eco-note">Note for project economics</div>
+                    </section>
+                    <section class="card bottom-right">
+                        <div class="hd"><em>9</em>key Project Economic Inputs</div>
+                        <table class="inputs">
+                            <tr><th>Product Type</th><th>Avg. Unit Size</th><th>Eff.</th><th>Units / Acre</th><th>Avg. Rent</th><th>Other Income</th><th>Occupancy</th><th>OpEx</th><th>Cap Rate</th><th>Hard Costs</th><th>Soft Costs</th><th>Financing</th><th>Parking Cost / Space</th><th>Parking Spaces</th></tr>
+                            <tr class="blue"><td>SLAC - Low Rise Standard Luxury</td><td>1,195</td><td>85%</td><td>30</td><td>$6.47</td><td>3%</td><td>95%</td><td>35%</td><td>4.50%</td><td>$265 / gsf</td><td>20%</td><td>5%</td><td>$10,000</td><td>1.75</td></tr>
+                            <tr class="purple-row"><td>SLAC - Low Rise Ultra-Luxury</td><td>1,240</td><td>85%</td><td>30</td><td>$10.59</td><td>3%</td><td>95%</td><td>40%</td><td>4.50%</td><td>$320 / gsf</td><td>20%</td><td>5%</td><td>$10,000</td><td>1.75</td></tr>
+                        </table>
+                        <div class="eco-note">Note for project economics</div>
+                    </section>
+                    </div>
+                </div>
+                <section class="card">
+                    <div class="hd">Appendix</div>
+                </section>
+            </main>
+        </div>
+    </div>
+</body>
+
+</html>

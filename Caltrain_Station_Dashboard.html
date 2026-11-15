@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Caltrain Station Dashboard</title>
+    <style>
+        :root {
+            --bg: #f3efe8;
+            --navy: #14213d;
+            --red: #a8142f;
+            --gold: #b08d57;
+            --blue: #d9eefa;
+            --blue2: #bfe3f6;
+            --pur: #eadcf8;
+            --pur2: #d9c3f3;
+            --tan: #f3ead8;
+            --txt: #555;
+            --line: #d8d2c6
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            background: var(--bg);
+            font-family: Arial, Helvetica, sans-serif;
+            color: var(--txt);
+            font-size: 12px;
+            line-height: 1.35
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg)
+        }
+
+        #stage {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1250px;
+            height: 2275px;
+        }
+
+        .wrap {
+            width: 1250px;
+            height: 2275px;
+            gap: 5px;
+            padding: 14px 14px 10px;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            overflow: hidden
+        }
+
+        .dashboard-content {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 10px
+        }
+
+        .dashboard-content>.card,
+        .dashboard-content>.row {
+            margin-bottom: 0 !important
+        }
+
+        h1 {
+            font-size: 36px;
+            color: var(--navy);
+            font-weight: 800;
+            line-height: 1
+        }
+
+        .sub {
+            font-size: 16px;
+            color: #666;
+            margin: 2px 0 8px
+        }
+
+        .kpis {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 5px
+        }
+
+        .kpi {
+            background: #fff;
+            border-radius: 6px;
+            padding: 8px;
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        .ye td,
+        td.ye {
+            background: #fbe9b4;
+            font-weight: 700
+        }
+        .kpi img {
+            width: 32px;
+            height: 32px;
+            flex: none;
+            object-fit: contain
+        }
+
+        .kpi b {
+            display: block;
+            font-size: 18px;
+            color: var(--red)
+        }
+
+        .kpi span {
+            font-size: 10.5px;
+            color: var(--navy);
+            line-height: 1.2
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 10px
+        }
+
+        .hd {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--navy);
+            text-transform: uppercase;
+            margin-bottom: 6px
+        }
+
+        .hd em {
+            font-style: normal;
+            background: var(--red);
+            color: #fff;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px
+        }
+
+        .row {
+            display: flex;
+            gap: 12px
+        }
+
+        .g {
+            display: grid;
+            gap: 10px
+        }
+
+        h3 {
+            font-size: 13px;
+            color: var(--gold);
+            margin: 4px 0
+        }
+
+        h3.r {
+            color: var(--red)
+        }
+
+        .it {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 7px
+        }
+
+        .it img {
+            width: 26px;
+            height: 26px;
+            flex: none;
+            object-fit: contain
+        }
+
+        .it i {
+            font-style: normal;
+            font-size: 20px;
+            color: var(--gold);
+            width: 26px;
+            text-align: center;
+            flex: none
+        }
+
+        .it b {
+            display: block;
+            color: var(--navy);
+            font-size: 11.5px
+        }
+
+        .ph {
+            background: #e6e2da;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8d8678;
+            font-size: 12px;
+            text-align: center
+        }
+
+        .pill {
+            background: #d9eefa;
+            color: var(--navy);
+            font-weight: 700;
+            font-size: 14px;
+            padding: 7px 10px;
+            margin-bottom: 8px
+        }
+
+        ul {
+            list-style: none
+        }
+
+        li {
+            padding-left: 16px;
+            position: relative;
+            margin-bottom: 6px
+        }
+
+        li:before {
+            content: "▶";
+            position: absolute;
+            left: 0;
+            color: #9a9285;
+            font-size: 9px;
+            top: 2px
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 10.5px
+        }
+
+        th,
+        td {
+            padding: 3px 5px;
+            text-align: center;
+            border-bottom: 1px solid #fff
+        }
+
+        th:first-child,
+        td:first-child {
+            text-align: left
+        }
+
+        .t1 th {
+            background: #d9eefa;
+            color: var(--navy)
+        }
+
+        .t1 .s td {
+            background: #e3f2fb
+        }
+
+        .t1 .u td {
+            background: #efe3fa
+        }
+
+        .t1 .tt td {
+            background: var(--tan);
+            font-weight: 700
+        }
+
+        .t2 th {
+            background: #4a5568;
+            color: #fff
+        }
+
+        .t2 .s td {
+            background: #e3f2fb
+        }
+
+        .t2 .u td {
+            background: #efe3fa
+        }
+
+        .t3 th {
+            background: #d9d4ca;
+            color: var(--navy)
+        }
+
+        .t3 td {
+            background: #f1eee8;
+            border-bottom: 1px solid #ddd
+        }
+
+        .t3 th + th {
+            border-left: 1px solid rgba(20, 33, 61, .25)
+        }
+
+        .t3 td + td {
+            border-left: 1px solid #ddd
+        }
+
+        .t3 td:first-child.i {
+            padding-left: 16px;
+            font-style: italic
+        }
+
+        .t3 th.a {
+            background: var(--blue)
+        }
+
+        .t3 th.b {
+            background: var(--pur)
+        }
+
+        .t4 th {
+            background: #2f3a4f;
+            color: #fff;
+            font-size: 9.5px
+        }
+
+        .t4 .s td {
+            background: #e3f2fb
+        }
+
+        .t4 .u td {
+            background: #efe3fa
+        }
+
+        .box {
+            border-radius: 4px;
+            padding: 8px
+        }
+
+        .profile-columns {
+            display: grid;
+            gap: 10px;
+            flex: 1
+        }
+
+        .renter-profile-card {
+            display: flex;
+            flex-direction: column;
+            min-height: 0
+        }
+
+        .renter-profile-card .profile-columns,
+        .renter-profile-card .profile-block {
+            min-height: 0
+        }
+
+        .amenity-card {
+            display: flex;
+            flex-direction: column;
+            min-height: 0
+        }
+
+        .profile-block {
+            min-width: 0;
+            display: flex;
+            flex-direction: column
+        }
+
+        .profile-panels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            flex: 1;
+            min-height: 0
+        }
+
+        .profile-panel {
+            display: flex;
+            flex-direction: column;
+            padding: 8px;
+            border-radius: 4px;
+            background: var(--blue);
+            font-size: 11px;
+            min-height: 0
+        }
+
+        .profile-panel.purple {
+            background: var(--pur)
+        }
+
+        .profile-panel b {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--navy);
+            font-size: 12px
+        }
+
+        .profile-panel p {
+            margin-top: 4px;
+            font-size: 11px
+        }
+
+        .positioning-copy {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+            font-size: 12px
+        }
+
+        .positioning-copy img {
+            width: 30px;
+            height: 30px;
+            flex: none;
+            object-fit: contain
+        }
+
+        .profile-detail {
+            display: flex;
+            align-items: flex-start;
+            gap: 5px
+        }
+
+        .profile-detail img {
+            width: 18px;
+            height: 18px;
+            flex: none;
+            object-fit: contain
+        }
+
+        .positioning-icon,
+        .hd-icon,
+        .amenity-icon {
+            width: 22px;
+            height: 22px;
+            object-fit: contain
+        }
+
+        .positioning-icon {
+            display: block;
+            width: 30px;
+            height: 30px;
+            margin: 0 auto 4px
+        }
+
+        .hd-icon {
+            margin-right: 4px
+        }
+        .eco-note {
+            background: #f3ead8;
+            border-radius: 4px;
+            padding: 4px 6px;
+            font-size: 9.5px;
+            font-style: italic;
+            margin-top: 4px
+                }
+        .am {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            flex: 1;
+            min-height: 0
+        }
+
+        .am h4 {
+            padding: 5px 8px;
+            font-size: 12.5px;
+            color: var(--navy);
+            margin-bottom: 6px
+        }
+
+        .am div.s {
+            background: var(--blue);
+            padding: 6px;
+            border-radius: 4px
+        }
+
+        .am div.u {
+            background: var(--pur);
+            padding: 6px;
+            border-radius: 4px
+        }
+
+        .am p {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 9px;
+            color: #555
+        }
+
+        .am p i {
+            font-style: normal;
+            color: var(--navy);
+            font-size: 15px;
+            width: 22px
+        }
+
+        .am p img {
+            width: 22px;
+            height: 22px;
+            flex: none;
+            object-fit: contain
+        }
+
+        .foot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px;
+            color: #666;
+            font-size: 10px
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 20px;
+            color: #6f7a64;
+            letter-spacing: 1px
+        }
+    </style>
+</head>
+
+<body>
+    <div id="stage">
+        <div class="wrap">
+
+            <div>
+                <!-- NAVIGATION PLACEHOLDER -->
+                <div class="ph" id="nav-dashboards" style="height:34px;margin-bottom:5px">[ Dashboard navigation
+                    placeholder ]</div>
+                <h1>University Avenue Dashboard</h1>
+                <div class="sub"> </div>
+            </div>
+
+            <div class="kpis">
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/32_KPI_Transit_Train.png" alt="">
+                    <div><b>10% / 5%</b><span>Transit / Mixed-Use<br/> Premium</span></div>
+                </div>
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/02_KPI_Total_Units_Building.png" alt="">
+                    <div><b>1,200</b><span>Total Units</span></div>
+                </div>
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/03_KPI_Program_Mix_Pie_Chart.png" alt="">
+                    <div><b>83.3%/16.7%</b><span>Standard Luxury / <br/> Ultra-Luxury</span></div>
+                </div>
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/04_KPI_Average_Unit_Size_Ruler.png" alt="">
+                    <div><b>863 SF</b><span>Avg. Unit Size</span></div>
+                </div>
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/05_KPI_Average_Rent_Dollar_Coin.png" alt="">
+                    <div><b>$6,535</b><span>Avg. Asking Rent</span></div>
+                </div>
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/06_KPI_Rent_Per_SF_Bar_Chart.png" alt="">
+                    <div><b>$7.57</b><span>Avg. $/SF</span></div>
+                </div>
+                 <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/06_KPI_Rent_Per_SF_Bar_Chart.png" alt="">
+                    <div><b>$7.57</b><span>Avg. $/SF</span></div>
+                </div>
+            </div>
+            <div class="dashboard-content">
+            <!-- 1 -->
+            <div class="card">
+                <div class="row">
+                    <div style="flex:1.05">
+                        <div class="hd"><em>1</em>Site Overview</div>
+                        <h3>Strengths &amp; Opportunities</h3>
+                        <div class="it"><img src="SLAC_Dashboard_Individual_Icons/32_KPI_Transit_Train.png" alt="">
+                            <div><b>Competitive Connectivity Positioning</b>Immediate walkable access to the Palo Alto
+                                Caltrain station with strong regional connectivity via Caltrain, VTA, SamTrans,
+                                Dumbarton Express, and Stanford's Marguerite Shuttle. Express rail access north to San
+                                Francisco and south to San Jose.</div>
+                        </div>
+                        <div class="it"><img src="SLAC_Dashboard_Individual_Icons/08_Site_Employment_People.png" alt="">
+                            <div><b>Access to Retail</b>Stanford Shopping Center is a short walk away, supporting
+                                premium urban positioning and strong amenity value.</div>
+                        </div>
+                        <div class="it"><img src="SLAC_Dashboard_Individual_Icons/09_Site_Seclusion_Tree.png" alt="">
+                            <div><b>Walkable Urban Node</b>Caltrain adjacency to University Avenue provides walkable access to
+                                downtown retail, dining, coffee shops, specialty retail, services, and bike connections.
+                            </div>
+                        </div>
+                        <h3 class="r">Challenges &amp; Considerations</h3>
+                        <div class="it"><img src="SLAC_Dashboard_Individual_Icons/10_Site_Development_Restrictions_Civic_Building.png" alt="">
+                            <div><b>Constrained Development Area</b>Elongated linear site between the rail corridor and
+                                surrounding street grid limits conventional podium or wrap configurations, but creates
+                                an opportunity for a distinctive architectural identity.</div>
+                        </div>
+                        <div class="it"><img src="SLAC_Dashboard_Individual_Icons/40_Challenge_Limited_Walkability_Warning.png" alt="">
+                            <div><b>Rail Noise Pollution</b>Direct adjacency to an active rail corridor introduces
+                                meaningful noise and vibration exposure, especially for lower floors and track-facing
+                                units.</div>
+                        </div>
+                    </div>
+                    <div style="flex:1.1;display:flex;flex-direction:column">
+                        <div
+                            style="text-align:center;font-weight:700;color:var(--navy);font-size:12px;margin:2px 0 6px">
+                            Caltrain Station Site and Surroundings</div>
+                        <!-- MAP PLACEHOLDER 1 -->
+                        <div class="ph" id="map-site" style="flex:1;min-height:340px">[ Site map placeholder ]</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2 -->
+            <div class="card">
+                <div class="hd"><em>2</em>Development Area / Typology Overview</div>
+                <div class="row">
+                    <div style="width:495px;position:relative">
+                        <!-- MAP PLACEHOLDER 2 -->
+                        <div class="ph" id="map-dev" style="height:310px">[ Development area map placeholder ]</div>
+                        <!-- LEGEND PLACEHOLDER -->
+                        <div class="ph" id="map-key"
+                            style="position:absolute;left:10px;top:10px;width:120px;height:50px;background:#f1eee8">[
+                            Map key placeholder ]</div>
+                    </div>
+                    <div style="flex:1">
+                        <div class="pill">Transit-oriented, mixed-use capable development site</div>
+                        <ul>
+                            <li>Recommend a high-density, transit-oriented development with Standard and Ultra-Luxury
+                                housing across multiple phases.</li>
+                            <li><b style="color:var(--navy)">Standard Luxury:</b> Approximately 800–1,000 higher-density
+                                residences comprising the majority of the program.</li>
+                            <li><b style="color:var(--navy)">Ultra-Luxury:</b> Approximately 200 ultra-premium
+                                residences, limited in scale to preserve exclusivity and differentiation.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="margin-bottom:10px">
+                <div class="card renter-profile-card" style="flex:1;margin:0">
+                    <div class="hd"><em>3</em>Renter Profile</div>
+                    <div class="profile-columns" style="grid-template-columns: 1fr;">
+                        <div class="profile-block">
+                            <div class="profile-panels">
+                                <div class="profile-panel">
+                                    <b>Standard Luxury</b>
+                                    <div class="profile-detail"><img src="SLAC_Dashboard_Individual_Icons/14_Standard_Luxury_Renter_Profile_People.png" alt=""><p>Young Professionals, Established Professionals, and Empty Nesters &amp; Downsizers</p></div>
+                                    <div class="profile-detail"><img src="SLAC_Dashboard_Individual_Icons/15_Standard_Luxury_Income_Dollar.png" alt=""><p>$150,000 – $350,000</p></div>
+                                    <div class="profile-detail"><img src="SLAC_Dashboard_Individual_Icons/16_Standard_Luxury_Motivation_Target.png" alt=""><p>Employment access, walkability, transit, retail, modern amenities, and convenience.</p></div>
+                                </div>
+                                <div class="profile-panel purple">
+                                    <b>Ultra-Luxury</b>
+                                    <div class="profile-detail"><img src="SLAC_Dashboard_Individual_Icons/17_Ultra_Luxury_Renter_Profile_People.png" alt=""><p>Established Professionals, Executives, and Affluent Empty Nesters &amp; Downsizers</p></div>
+                                    <div class="profile-detail"><img src="SLAC_Dashboard_Individual_Icons/18_Ultra_Luxury_Income_Dollar.png" alt=""><p>$300,000 – $750,000+ and/or substantial net worth</p></div>
+                                    <div class="profile-detail"><img src="SLAC_Dashboard_Individual_Icons/19_Ultra_Luxury_Motivation_Target.png" alt=""><p>Proximity to retail and neighborhood amenities, larger residences, and lock-and-leave convenience.</p></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" style="flex:1;margin:0">
+                    <div class="hd"><em>4</em>Typology / Positioning &amp; Rationale</div>
+                    <div class="profile-columns" style="grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div class="profile-block" style="background: var(--blue); border-radius: 6px; padding: 10px; min-height: 180px;">
+                            <h3>Typology / Positioning</h3>
+                            <div class="positioning-copy"><img src="SLAC_Dashboard_Individual_Icons/13_Positioning_Low_Rise_Building.png" alt=""><span>Recommend a mixed Standard Luxury and Ultra-Luxury program emphasizing transit orientation, walkability, retail adjacency, and convenience.</span></div>
+                        </div>
+                        <div class="profile-block" style="background: var(--pur); border-radius: 6px; padding: 10px; min-height: 180px;">
+                            <h3>Positioning Rationale</h3>
+                            <div class="positioning-copy"><img src="SLAC_Dashboard_Individual_Icons/20_Positioning_Rationale_Target.png" alt=""><span>Position as a transit-oriented, mixed-use development with target rents reflecting a 10% transit premium and 5% mixed-use premium, supported by ground-floor retail and surrounding amenities.</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card amenity-card" style="flex:1;margin:0">
+                    <div class="hd"><em>5</em>Amenities</div>
+                    <div class="am">
+                        <div class="s">
+                            <h4>Standard Luxury</h4>
+                            <p><img src="SLAC_Dashboard_Individual_Icons/33_Amenity_Pool_Swimmer.png" alt="">Resort-style pool and courtyard</p>
+                            <p><img src="SLAC_Dashboard_Individual_Icons/21_Standard_Luxury_Fitness_Dumbbell.png" alt="">Expanded fitness studio</p>
+                            <p><img src="SLAC_Dashboard_Individual_Icons/34_Amenity_Club_Lounge_Sofa.png" alt="">Club lounge</p>
+                            <p><img src="SLAC_Dashboard_Individual_Icons/25_Standard_Luxury_Resident_Services_Star.png" alt="">Select resident services</p>
+                        </div>
+                        <div class="u">
+                            <h4>Ultra-Luxury</h4>
+                            <p><img src="SLAC_Dashboard_Individual_Icons/35_Amenity_Elevated_Crown.png" alt="">Elevated and differentiated amenities</p>
+                            <p><img src="SLAC_Dashboard_Individual_Icons/36_Amenity_Wellness_Lotus.png" alt="">Enhanced wellness and lounge spaces</p>
+                            <p><img src="SLAC_Dashboard_Individual_Icons/29_Ultra_Luxury_Secure_Parking_Car.png" alt="">Secure parking</p>
+                            <p><img src="SLAC_Dashboard_Individual_Icons/26_Ultra_Luxury_Concierge_Bell.png" alt="">Hospitality-oriented resident services</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5 & 6 -->
+            <div class="row" style="margin-bottom:10px">
+                <div class="card" style="flex:1;margin:0;background:#eaf5fb">
+                    <div class="hd"><em>6</em>Rents &amp; Program Mix</div>
+                    <table class="t1">
+                        <tr>
+                            <th>Unit Type</th>
+                            <th>Units</th>
+                            <th>Mix</th>
+                            <th>Avg. Unit Size (SF)</th>
+                            <th>Asking Rent</th>
+                            <th>Avg. $/SF</th>
+                        </tr>
+                        <tr class="s">
+                            <td>Standard Luxury</td>
+                            <td>1,000</td>
+                            <td>83.3%</td>
+                            <td>828</td>
+                            <td>$5,930</td>
+                            <td>$7.17</td>
+                        </tr>
+                        <tr class="u">
+                            <td>Ultra-Luxury</td>
+                            <td>200</td>
+                            <td>16.7%</td>
+                            <td>1,040</td>
+                            <td>$9,572</td>
+                            <td>$9.20</td>
+                        </tr>
+                        <tr class="tt">
+                            <td>Total / Average</td>
+                            <td>1,200</td>
+                            <td>100.0%</td>
+                            <td>863</td>
+                            <td>$6,535</td>
+                            <td>$7.57</td>
+                        </tr>
+                    </table>
+                    <b style="color:var(--navy);display:block;margin:8px 0 3px;font-size:12px">Unit Mix Detail</b>
+                    <table class="t2">
+                        <tr>
+                            <th>Unit Type</th>
+                            <th>Units</th>
+                            <th>Mix</th>
+                            <th>Avg. Unit Size (SF)</th>
+                            <th>Asking Rent</th>
+                            <th>Avg. $/SF</th>
+                        </tr>
+                        <tr class="s">
+                            <td>Studio Standard Luxury</td>
+                            <td>100</td>
+                            <td>8.3%</td>
+                            <td>525</td>
+                            <td>$4,420</td>
+                            <td>$8.42</td>
+                        </tr>
+                        <tr class="s">
+                            <td>Jr. 1BR Standard Luxury</td>
+                            <td>50</td>
+                            <td>4.2%</td>
+                            <td>575</td>
+                            <td>$4,780</td>
+                            <td>$8.31</td>
+                        </tr>
+                        <tr class="s">
+                            <td>1BR Standard Luxury</td>
+                            <td>450</td>
+                            <td>37.5%</td>
+                            <td>725</td>
+                            <td>$5,365</td>
+                            <td>$7.40</td>
+                        </tr>
+                        <tr class="s">
+                            <td>1BR+ Standard Luxury</td>
+                            <td>100</td>
+                            <td>8.3%</td>
+                            <td>775</td>
+                            <td>$5,730</td>
+                            <td>$7.39</td>
+                        </tr>
+                        <tr class="s">
+                            <td>2BR Standard Luxury</td>
+                            <td>200</td>
+                            <td>16.7%</td>
+                            <td>1,100</td>
+                            <td>$7,215</td>
+                            <td>$6.56</td>
+                        </tr>
+                        <tr class="s">
+                            <td>2BR+ Standard Luxury</td>
+                            <td>50</td>
+                            <td>4.2%</td>
+                            <td>1,150</td>
+                            <td>$7,570</td>
+                            <td>$6.58</td>
+                        </tr>
+                        <tr class="s">
+                            <td>3BR Standard Luxury</td>
+                            <td>50</td>
+                            <td>4.2%</td>
+                            <td>1,300</td>
+                            <td>$8,795</td>
+                            <td>$6.77</td>
+                        </tr>
+                        <tr class="ye">
+                            <td>STANDARD LUXURY / AVG.</td>
+                            <td>1,000</td>
+                            <td>83.3%</td>
+                            <td>828</td>
+                            <td>$5,930</td>
+                            <td>$7.17</td>
+                        </tr>
+                        <tr class="u">
+                            <td>1BR Ultra-Luxury</td>
+                            <td>60</td>
+                            <td>5.0%</td>
+                            <td>800</td>
+                            <td>$7,060</td>
+                            <td>$8.83</td>
+                        </tr>
+                        <tr class="u">
+                            <td>1BR+ Ultra-Luxury</td>
+                            <td>20</td>
+                            <td>1.7%</td>
+                            <td>900</td>
+                            <td>$8,120</td>
+                            <td>$9.02</td>
+                        </tr>
+                        <tr class="u">
+                            <td>2BR Ultra-Luxury</td>
+                            <td>80</td>
+                            <td>6.7%</td>
+                            <td>1,100</td>
+                            <td>$9,975</td>
+                            <td>$9.07</td>
+                        </tr>
+                        <tr class="u">
+                            <td>2BR+ Ultra-Luxury</td>
+                            <td>20</td>
+                            <td>1.7%</td>
+                            <td>1,200</td>
+                            <td>$12,235</td>
+                            <td>$10.20</td>
+                        </tr>
+                        <tr class="u">
+                            <td>3BR Ultra-Luxury</td>
+                            <td>20</td>
+                            <td>1.7%</td>
+                            <td>1,500</td>
+                            <td>$14,280</td>
+                            <td>$9.52</td>
+                        </tr>
+                                                <tr class="ye">
+                            <td>ULTRA-LUXURY / AVG.</td>
+                            <td>200</td>
+                            <td>16.7%</td>
+                            <td>1,040</td>
+                            <td>$9,572</td>
+                            <td>$9.20</td>
+                        </tr>
+                    </table>
+                    <div class="eco-note">Note for project economics</div>
+                </div>
+                <div style="flex:1.05;display:flex;flex-direction:column;gap:10px">
+                    <div class="card" style="margin:0">
+                        <div class="hd"><em>7</em>Residential Project Economics</div>
+                        <table class="t3">
+                            <tr>
+                                <th></th>
+                                <th class="a">Standard Luxury<br>(1,000 units)</th>
+                                <th class="b">Ultra-Luxury<br>(200 units)</th>
+                            </tr>
+                            <tr>
+                                <td>Units</td>
+                                <td>1,000</td>
+                                <td>200</td>
+                            </tr>
+                            <tr>
+                                <td>NOI</td>
+                                <td>$47,550,000</td>
+                                <td>$12,740,000</td>
+                            </tr>
+                            <tr>
+                                <td>Cap Rate</td>
+                                <td>4.50%</td>
+                                <td>4.50%</td>
+                            </tr>
+                            <tr>
+                                <td>Stabilized Apartment Market Value</td>
+                                <td>$1,056,670,000</td>
+                                <td>$283,150,000</td>
+                            </tr>
+                            <tr>
+                                <td class="i">Market Value / Unit</td>
+                                <td>$1,060,000</td>
+                                <td>$1,420,000</td>
+                            </tr>
+                            <tr>
+                                <td>YOC</td>
+                                <td>5.50%</td>
+                                <td>5.50%</td>
+                            </tr>
+                            <tr>
+                                <td>Max Development Costs (incl. Land)</td>
+                                <td>$864,550,000</td>
+                                <td>$231,670,000</td>
+                            </tr>
+                            <tr>
+                                <td class="i">Max Costs / Unit</td>
+                                <td>$864,550</td>
+                                <td>$1,158,350</td>
+                            </tr>
+                            <tr>
+                                <td>Est. Development Costs (excl. Land)</td>
+                                <td>$629,870,000</td>
+                                <td>$187,850,000</td>
+                            </tr>
+                            <tr>
+                                <td class="i">Est. Costs / Unit</td>
+                                <td>$629,870</td>
+                                <td>$939,350</td>
+                            </tr>
+                            <tr>
+                                <td>Residual Land Value</td>
+                                <td>$230,000,000</td>
+                                <td>$44,000,000</td>
+                            </tr>
+                            <tr>
+                                <td class="i">RLV / Unit</td>
+                                <td>$230,000</td>
+                                <td>$220,000</td>
+                            </tr>
+                            <tr>
+                                <td class="i">RLV / Acre</td>
+                                <td>$23,470,000</td>
+                                <td>$17,520,000</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="box" style="background:var(--tan)">
+                        <h3 style="color:var(--navy);font-size:13px"><img class="hd-icon" src="SLAC_Dashboard_Individual_Icons/37_Timing_Partnership_Handshake.png" alt="">Timing / Partnerships</h3>
+                        <ul style="margin-top:6px">
+                            <li><b style="color:var(--navy)">Near-Term Opportunity:</b> The underutilized site supports
+                                near-term development, though timing will depend on planning and coordination around the
+                                Caltrain station.</li>
+                            <li><b style="color:var(--navy)">Early Partnership Encouraged:</b> The scale and complexity
+                                of the transit-oriented program favor early partner involvement; a JV retains greater
+                                control and upside, while a ground lease provides greater risk transfer.</li>
+                        </ul>
+                    </div>
+                </div>
+                
+            </div>
+
+            <!-- 7 -->
+            <div class="card">
+                <div class="hd"><em>8</em>key Project Economic Inputs</div>
+                <table class="t4">
+                    <tr>
+                        <th>Product Type</th>
+                        <th>Net SF / Unit</th>
+                        <th>Efficiency</th>
+                        <th>Units / Acre</th>
+                        <th>Avg. Rent $ / SF / Mo</th>
+                        <th>Other Income</th>
+                        <th>Occupancy</th>
+                        <th>Operating Expenses</th>
+                        <th>Base Cap Rate</th>
+                        <th>Hard Costs</th>
+                        <th>Soft Costs (% of Hard)</th>
+                        <th>Financing Cost</th>
+                        <th>Parking Cost / Space</th>
+                        <th>Parking Spaces</th>
+                    </tr>
+                    <tr class="s">
+                        <td>Caltrain – Standard Luxury</td>
+                        <td>828</td>
+                        <td>80%</td>
+                        <td>100</td>
+                        <td>$6.70</td>
+                        <td>8%</td>
+                        <td>95%</td>
+                        <td>30%</td>
+                        <td>4.50%</td>
+                        <td>$410 / gsf</td>
+                        <td>20%</td>
+                        <td>5%</td>
+                        <td>$40,000</td>
+                        <td>1.30</td>
+                    </tr>
+                    <tr class="u">
+                        <td>Caltrain – Ultra-Luxury</td>
+                        <td>1,040</td>
+                        <td>80%</td>
+                        <td>80</td>
+                        <td>$8.33</td>
+                        <td>8%</td>
+                        <td>95%</td>
+                        <td>40%</td>
+                        <td>4.50%</td>
+                        <td>$500 / gsf</td>
+                        <td>20%</td>
+                        <td>5%</td>
+                        <td>$40,000</td>
+                        <td>1.50</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- 8 -->
+            <div class="card">
+                <div class="hd"><em>8</em><img class="hd-icon" src="SLAC_Dashboard_Individual_Icons/31_Key_Lessons_Lightbulb.png" alt="">Case Study / Lessons Learned</div>
+                <div class="row" style="align-items:stretch">
+                    <div class="ph" id="img-1" style="width:250px;min-height:110px">[ Photo ]</div>
+                    <div style="width:190px"><b style="color:var(--navy);font-size:15px">Intro Burbank</b>
+                        <table style="font-size:10px;margin-top:4px;background:#f1eee8">
+                            <tr>
+                                <td><b>Location</b></td>
+                                <td style="text-align:left">800 N Front St, Burbank, CA 91502</td>
+                            </tr>
+                            <tr>
+                                <td><b>Year Built</b></td>
+                                <td style="text-align:left">2025</td>
+                            </tr>
+                            <tr>
+                                <td><b>Unit Count</b></td>
+                                <td style="text-align:left">573</td>
+                            </tr>
+                            <tr>
+                                <td><b>Unit Size Ranges</b></td>
+                                <td style="text-align:left">530 SF – 1,600 SF | Avg Size: 945 SF</td>
+                            </tr>
+                            <tr>
+                                <td><b>Avg. Rent</b></td>
+                                <td style="text-align:left">$4,031 | $4.26/SF</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="ph" id="img-2" style="width: 250px;px;min-height:110px">[ Photo ]</div>
+                    <div style="width:140px"><b style="color:var(--navy);font-size:12px">Key Success Factors</b>
+                        <ul style="margin-top:4px;font-size:10px">
+                            <li style="margin-bottom:3px">Direct adjacency to transit</li>
+                            <li style="margin-bottom:3px">Convenient regional access</li>
+                            <li style="margin-bottom:3px">Near entertainment employers</li>
+                            <li>Distinctive curated amenity program</li>
+                        </ul>
+                    </div>
+                    <div class="box" style="flex:1;background:var(--tan)"><b style="color:var(--navy);font-size:12px">💡
+                            Key Lessons for Caltrain</b>
+                        <ul style="margin-top:4px;font-size:9.5px">
+                            <li style="margin-bottom:3px">Premium comes from transit + mixed-use adjacency.</li>
+                            <li style="margin-bottom:3px">Ground-floor retail and pedestrian connections are important.
+                            </li>
+                            <li style="margin-bottom:3px">Constrain noise exposure and pricing strategy for track-facing
+                                units.</li>
+                            <li>Use distinctive architecture and amenities to stand out in the market.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="hd">Appendix</div>
+            </div>
+    </div>
+</body>
+
+</html>

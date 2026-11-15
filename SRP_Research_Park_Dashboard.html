@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Stanford Research Park Dashboard</title>
+    <style>
+        :root {
+            --bg: #f3efe8;
+            --card: #faf8f4;
+            --navy: #14213d;
+            --red: #a8142f;
+            --gold: #b08d57;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg)
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #555;
+            font-size: 11px;
+            line-height: 1.35
+        }
+
+        #stage {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1250px;
+            height: 2400px
+        }
+
+        .wrap {
+            width: 1250px;
+            height: 2400px;
+            padding: 14px 14px 10px;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 5px;
+            overflow: hidden
+        }
+
+        .dashboard-content {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 10px
+        }
+
+        h1 {
+            font-size: 36px;
+            color: var(--navy);
+            font-weight: 800;
+            line-height: 1
+        }
+
+        .sub {
+            font-size: 16px;
+            color: #666;
+            margin: 2px 0 8px
+        }
+
+        .kpis {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 5px
+        }
+
+        .kpi {
+            background: #fff;
+            border-radius: 6px;
+            padding: 8px;
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        .kpi img {
+            width: 32px;
+            height: 32px;
+            flex: none;
+            object-fit: contain
+        }
+
+        .kpi b {
+            display: block;
+            font-size: 17px;
+            color: var(--red)
+        }
+
+        .kpi span {
+            font-size: 10.5px;
+            color: var(--navy);
+            line-height: 1.2
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 6px;
+            padding: 10px
+        }
+
+        .hd {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--navy);
+            text-transform: uppercase;
+            margin-bottom: 6px
+        }
+
+        .hd em {
+            font-style: normal;
+            background: var(--red);
+            color: #fff;
+            border-radius: 50%;
+            min-width: 22px;
+            height: 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px
+        }
+
+        .hd-icon {
+            width: 24px;
+            height: 24px;
+            flex: none;
+            object-fit: contain
+        }
+
+        .ul {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 4px
+        }
+
+        .row {
+            display: flex;
+            gap: 10px
+        }
+
+        h3 {
+            font-size: 13px;
+            color: var(--gold);
+            margin: 4px 0
+        }
+
+        h3.r {
+            color: var(--red)
+        }
+
+        .it {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 7px
+        }
+
+        .it img {
+            width: 26px;
+            height: 26px;
+            flex: none;
+            object-fit: contain
+        }
+
+        .it i {
+            font-style: normal;
+            font-size: 20px;
+            color: var(--gold);
+            width: 26px;
+            text-align: center;
+            flex: none
+        }
+
+        .it i.r {
+            color: var(--red)
+        }
+
+        .it b {
+            display: block;
+            color: var(--navy);
+            font-size: 11.5px
+        }
+
+        .ph {
+            background: #e6e2da;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8d8678;
+            font-size: 12px;
+            text-align: center
+        }
+
+        .pill {
+            background: #d9eefa;
+            color: var(--navy);
+            font-weight: 700;
+            font-size: 14px;
+            padding: 7px 10px;
+            margin-bottom: 8px
+        }
+
+        ul {
+            list-style: none
+        }
+
+        li {
+            padding-left: 16px;
+            position: relative;
+            margin-bottom: 6px
+        }
+
+        li:before {
+            content: "▶";
+            position: absolute;
+            left: 0;
+            color: #9a9285;
+            font-size: 9px;
+            top: 2px
+        }
+
+        b.n {
+            color: var(--navy)
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 10.5px
+        }
+
+        th,
+        td {
+            padding: 3px 5px;
+            text-align: center;
+            border-bottom: 1px solid #fff
+        }
+
+        th:first-child,
+        td:first-child {
+            text-align: left
+        }
+
+        th {
+            background: #4a5568;
+            color: #fff;
+            font-size: 10px
+        }
+
+        td {
+            background: #f1eee8
+        }
+
+        .bl td,
+        td.bl,
+        th.lb {
+            background: #e3f2fb;
+            color: #14213d
+        }
+
+        .pu td,
+        td.pu,
+        th.lp {
+            background: #efe3fa;
+            color: #14213d
+        }
+
+        .ye td,
+        td.ye {
+            background: #fbe9b4;
+            font-weight: 700
+        }
+
+        .gr td,
+        td.gr {
+            background: #eaf1dc
+        }
+
+        .rd td,
+        td.rd {
+            background: #f8ddd6
+        }
+
+        th.lb {
+            background: #d3ebf8
+        }
+
+        th.lp {
+            background: #e2d3f5
+        }
+
+        .h-bl {
+            background: #1f5f99 !important
+        }
+
+        .h-or {
+            background: #d4862a !important
+        }
+
+        .h-pu {
+            background: #6a3d9a !important
+        }
+
+        .h-gr {
+            background: #7a9a3f !important
+        }
+
+        .h-rd {
+            background: #c0442f !important
+        }
+
+        .eco td {
+            background: #f1eee8;
+            border-bottom: 1px solid #ddd
+        }
+
+        .eco th + th {
+            border-left: 1px solid rgba(255, 255, 255, .6)
+        }
+
+        .eco td + td {
+            border-left: 1px solid #ddd
+        }
+
+        .eco td.i {
+            padding-left: 14px;
+            font-style: italic
+        }
+
+        .eco th {
+            font-size: 10.5px
+        }
+
+        .eco-note {
+            background: #f3ead8;
+            border-radius: 4px;
+            padding: 4px 6px;
+            font-size: 9.5px;
+            font-style: italic;
+            margin-top: 4px
+        }
+
+        .box {
+            border-radius: 4px;
+            padding: 8px
+        }
+
+        .typology-profiles > div > div {
+            font-size: 12px;
+            font-weight: 700
+        }
+
+        .profile-detail {
+            display: flex;
+            align-items: flex-start;
+            gap: 7px
+        }
+
+        .profile-detail img {
+            width: 35px;
+            height: 35px;
+            margin-top: 1px;
+            flex: none;
+            object-fit: contain
+        }
+
+        .profile-detail.motivation {
+            margin-top: 2px
+        }
+
+        .amenity-icon {
+            width: 35px;
+            height: 35px;
+            flex: none;
+            object-fit: contain
+        }
+
+        .amenity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 7px;
+            margin-bottom: 8px
+        }
+
+        .amenity-item > img {
+            margin-top: 1px
+        }
+
+        .tan {
+            background: #f3ead8
+        }
+
+        .sm {
+            font-size: 9.5px
+        }
+
+        .nv {
+            color: var(--navy)
+        }
+
+        .am h4 {
+            font-size: 12.5px;
+            color: var(--navy);
+            margin-bottom: 5px
+        }
+
+        .am p {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px
+        }
+
+        .am p i {
+            font-style: normal;
+            color: var(--navy);
+            font-size: 15px;
+            width: 22px;
+            text-align: center;
+            flex: none
+        }
+
+        .am .s {
+            background: #d9eefa;
+            border-radius: 4px;
+            padding: 6px;
+            flex: 1
+        }
+
+        .am .u {
+            background: #eadcf8;
+            border-radius: 4px;
+            padding: 6px;
+            flex: 1
+        }
+
+        :root {
+            --bg: #f2f2f2;
+            --card: #fff
+        }
+
+        .card {
+            border-radius: 10px
+        }
+
+        .hd {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 4px
+        }
+
+        .sr th {
+            font-size: 9.5px
+        }
+    </style>
+</head>
+
+<body>
+    <div id="stage">
+        <div class="wrap">
+            <div>
+                <div class="ph" id="nav-dashboards" style="height:40px;margin-bottom:5px">[ Dashboard navigation
+                    placeholder ]</div>
+                <h1>Stanford Research Park Dashboard</h1>
+                <div class="sub">Site Analysis, Program, Positioning &amp; Project Economics</div>
+
+            </div>
+            <div class="kpis">
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/01_KPI_Sand_Hill_Prestige_Star.png" alt="">
+                    <div><b>5%</b><span>Mixed-Use <br/>Premium</span></div>
+                </div>
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/02_KPI_Total_Units_Building.png" alt="">
+                    <div><b>1,280</b><span>Total Units</span></div>
+                </div>
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/03_KPI_Program_Mix_Pie_Chart.png" alt="">
+                    <div><b>4</b><span>Residential Programs</span></div>
+                </div>
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/04_KPI_Average_Unit_Size_Ruler.png" alt="">
+                    <div><b>699–1,040 SF</b><span>Avg. Unit Sizes</span></div>
+                </div>
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/05_KPI_Average_Rent_Dollar_Coin.png" alt="">
+                    <div><b>$4,590-$8,460</b><span>Avg. Asking Rents</span></div>
+                </div>
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/06_KPI_Rent_Per_SF_Bar_Chart.png" alt="">
+                    <div><b>$6.57–$8.19</b><span>Avg. $/SF</span></div>
+                </div>
+                <div class="kpi"><img src="SLAC_Dashboard_Individual_Icons/06_KPI_Rent_Per_SF_Bar_Chart.png" alt="">
+                    <div><b>$6.57–$8.19</b><span>Avg. $/SF</span></div>
+                </div>
+            </div>
+            <div class="dashboard-content">
+            <div class="row">
+                <div class="card" style="flex:1.2">
+                    <div class="hd "><em>1</em>Site Overview</div>
+                    <h3>Strengths &amp; Opportunities</h3>
+                    <div class="it"><img src="SLAC_Dashboard_Individual_Icons/08_Site_Employment_People.png" alt="">
+                        <div><b>Major employment center</b>More than 150 companies spanning research, technology, and
+                            life sciences; living near work offers an important commute advantage.</div>
+                    </div>
+                    <div class="it"><img src="SLAC_Dashboard_Individual_Icons/08_Site_Employment_People.png" alt="">
+                        <div><b>Diverse renter profiles</b>Early-career professionals, families, senior researchers, and
+                            executives create demand for homes that evolve with life stages.</div>
+                    </div>
+                    <div class="it"><img src="SLAC_Dashboard_Individual_Icons/09_Site_Seclusion_Tree.png" alt="">
+                        <div><b>Open space and trails</b>Adjacent to the Stanford Foothills and the 2,300-acre
+                            open-space network, including the popular Dish Loop.</div>
+                    </div>
+                    <h3 class="r">Challenges &amp; Considerations</h3>
+                    <div class="it"><i class="r">🏛</i>
+                        <div><b>Limited retail and dining</b>New residents would need an active, walkable retail and
+                            dining environment on site.</div>
+                    </div>
+                    <div class="it"><img src="SLAC_Dashboard_Individual_Icons/12_Site_Transportation_Car.png" alt="">
+                        <div><b>Auto-oriented environment</b>Existing circulation favors cars; development should
+                            prioritize safe paths and resident mobility.</div>
+                    </div>
+                </div>
+                <div class="card" style="flex:1.3;display:flex;flex-direction:column">
+                    <div style="font-weight:700;color:var(--navy);font-size:14px;margin:2px 0 6px">Stanford Research
+                        Park Site and Surroundings</div>
+                    <div class="ph" id="map-site" style="flex:1;min-height:250px">[ Site map placeholder ]</div>
+                    <div class="sm" style="margin-top:4px">Source: RCLCO site analysis &nbsp;|&nbsp; Highlighted area
+                        represents the identified SRP study area</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="hd "><em>2</em>Development Area / Typology Overview</div>
+                <div class="row">
+                    <div class="ph" id="map-dev" style="width:600px;height:200px">[ Development
+                        area map placeholder ]</div>
+                    <div class="box" style="flex:1;background:#f8f6f2"><b class="n" style="font-size:16px">A
+                            four-program housing ecosystem</b>
+                        <div style="margin:4px 0 8px">SRP is a long-term district-scale opportunity: residents can enter
+                            with smaller homes, move into family housing, and later choose larger or urban-style
+                            residences.</div>
+                        <div class="row" style="gap:6px">
+                            <div style="flex:1;background:#dff1fa;border-radius:6px;padding:8px"><b
+                                    style="color:#0e5a8a;font-size:13px">Attainable Luxury</b>
+                                <div style="margin-top:3px">Young professionals</div>
+                                <div class="sm" style="color:#777;margin-top:2px">Studios / 1BR</div>
+                            </div>
+                            <div style="flex:1;background:#eaf1dc;border-radius:6px;padding:8px"><b
+                                    style="color:#7a9a3f;font-size:13px">Standard Luxury</b>
+                                <div style="margin-top:3px">Young couples &amp; families</div>
+                                <div class="sm" style="color:#777;margin-top:2px">1–3BR</div>
+                            </div>
+                            <div style="flex:1;background:#eadcf8;border-radius:6px;padding:8px"><b
+                                    style="color:#6a2c91;font-size:13px">Ultra-Luxury</b>
+                                <div style="margin-top:3px">Mature professionals / retirees</div>
+                                <div class="sm" style="color:#777;margin-top:2px">Larger residences</div>
+                            </div>
+                            <div style="flex:1;background:#f8ddd6;border-radius:6px;padding:8px"><b
+                                    style="color:#c0442f;font-size:13px">High-Rise</b>
+                                <div style="margin-top:3px">Urban lifestyle residents</div>
+                                <div class="sm" style="color:#777;margin-top:2px">Studio–Penthouse</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="card" style="flex:2">
+                    <div class="hd "><em>3</em>Positioning &amp; Renter Profile</div>
+                    <div class="row" style="gap:6px">
+                        <div style="flex:1;background:#dff1fa;border-radius:6px;padding:8px"><b
+                                style="color:#0e5a8a;font-size:15px;">Attainable Luxury</b>
+                            <div class="profile-detail n" style="margin:7px 0;font-weight: 700;font-size:12px"><img src="SLAC_Dashboard_Individual_Icons/14_Standard_Luxury_Renter_Profile_People.png" alt="">Young professionals</div><b
+                                style="color:#0e5a8a;font-size:13px;display:block;margin:11px 0 4px">$4,590 avg. rent</b>
+                            <div class="profile-detail motivation" style="font-size:13px;margin:6px 0 4px">Employment access, smaller homes and flexible lifestyles.</div>
+                        </div>
+                        <div style="flex:1;background:#eaf1dc;border-radius:6px;padding:8px"><b
+                                style="color:#7a9a3f;font-size:15px">Standard Luxury</b>
+                            <div class="profile-detail n" style="margin:7px 0;font-weight: 700;font-size:12px"><img src="SLAC_Dashboard_Individual_Icons/14_Standard_Luxury_Renter_Profile_People.png" alt="">Growing households</div><b
+                                style="color:#7a9a3f;font-size:13px;display:block;margin:11px 0 4px">$5,435 avg. rent</b>
+                            <div class="profile-detail motivation" style="font-size:13px;margin:6px 0 4px">Family-friendly layouts, quality finishes and green space.</div>
+                        </div>
+                        <div style="flex:1;background:#eadcf8;border-radius:6px;padding:8px"><b
+                                style="color:#6a2c91;font-size:15px">Ultra-Luxury</b>
+                            <div class="profile-detail n" style="margin:7px 0;font-weight: 700;font-size:12px"><img src="SLAC_Dashboard_Individual_Icons/17_Ultra_Luxury_Renter_Profile_People.png" alt="">Senior professionals</div><b
+                                style="color:#6a2c91;font-size:13px;display:block;margin:11px 0 4px">$8,460 avg. rent</b>
+                            <div class="profile-detail motivation" style="font-size:13px;margin:6px 0 4px">Spacious homes, private amenities and premium service.</div>
+                        </div>
+                        <div style="flex:1;background:#f8ddd6;border-radius:6px;padding:8px"><b
+                                style="color:#c0442f;font-size:15px">High-Rise</b>
+                            <div class="profile-detail n" style="margin:7px 0;font-weight: 700;font-size:12px"><img src="SLAC_Dashboard_Individual_Icons/14_Standard_Luxury_Renter_Profile_People.png" alt="">Lifestyle renters</div><b
+                                style="color:#c0442f;font-size:13px;display:block;margin:11px 0 4px">$6,555 avg. rent</b>
+                            <div class="profile-detail motivation" style="font-size:13px;margin:6px 0 4px">Urban density, walkable retail and district amenities.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" style="flex:1">
+                    <div class="hd "><em>4</em>Amenities</div>
+                    <div class="amenity-item">
+                        <img class="amenity-icon" src="SLAC_Dashboard_Individual_Icons/21_Standard_Luxury_Fitness_Dumbbell.png" alt="">
+                        <div><b style="color:#0e5a8a;font-size:13px">Attainable</b>
+                            <div style="font-size:12px" >Core services, outdoor space, co-working</div>
+                        </div>
+                    </div>
+                    <div class="amenity-item">
+                        <img class="amenity-icon" src="SLAC_Dashboard_Individual_Icons/23_Standard_Luxury_Outdoor_Tree.png" alt="">
+                        <div><b style="color:#7a9a3f;font-size:13px">Standard</b>
+                            <div style="font-size:12px" >Fitness, pools, landscaped gathering areas</div>
+                        </div>
+                    </div>
+                    <div class="amenity-item">
+                        <img class="amenity-icon" src="SLAC_Dashboard_Individual_Icons/26_Ultra_Luxury_Concierge_Bell.png" alt="">
+                        <div><b style="color:#6a2c91;font-size:13px">Ultra-Luxury</b>
+                            <div style="font-size:12px" >Secure parking, wellness and concierge services</div>
+                        </div>
+                    </div>
+                    <div class="amenity-item">
+                        <img class="amenity-icon" src="SLAC_Dashboard_Individual_Icons/25_Standard_Luxury_Resident_Services_Star.png" alt="">
+                        <div><b style="color:#c0442f;font-size:13px">High-Rise</b>
+                            <div style="font-size:12px" >Active ground floors, rooftops and hospitality-style spaces</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="card" style="flex:1">
+                    <div class="hd "><em>5</em>Rents &amp; Program Mix</div>
+                    <table class="">
+                        <tr>
+                            <th>PROGRAM</th>
+                            <th>UNITS</th>
+                            <th>MIX</th>
+                            <th>AVG. SF</th>
+                            <th>RENT</th>
+                            <th>$/SF</th>
+                        </tr>
+                        <tr class="bl">
+                            <td>Attainable Luxury</td>
+                            <td>400</td>
+                            <td>31.3%</td>
+                            <td>699</td>
+                            <td>$4,590</td>
+                            <td>$6.57</td>
+                        </tr>
+                        <tr class="gr">
+                            <td>Standard Luxury</td>
+                            <td>330</td>
+                            <td>25.8%</td>
+                            <td>828</td>
+                            <td>$5,435</td>
+                            <td>$6.57</td>
+                        </tr>
+                        <tr class="pu">
+                            <td>Ultra-Luxury</td>
+                            <td>150</td>
+                            <td>11.7%</td>
+                            <td>1,040</td>
+                            <td>$8,460</td>
+                            <td>$8.13</td>
+                        </tr>
+                        <tr class="rd">
+                            <td>High-Rise</td>
+                            <td>400</td>
+                            <td>31.3%</td>
+                            <td>800</td>
+                            <td>$6,555</td>
+                            <td>$8.19</td>
+                        </tr>
+                        <tr class="ye">
+                            <td>TOTAL / AVG.</td>
+                            <td>1,280</td>
+                            <td>100%</td>
+                            <td>804</td>
+                            <td>$5,875</td>
+                            <td>~$7.31</td>
+                        </tr>
+                    </table><b class="n" style="display:block;margin:8px 0 3px;font-size:12px">Recommended Unit
+                        Types</b>
+                    <div class="row" style="gap:6px;margin-bottom:5px">
+                        <div style="flex:1">
+                            <div style="background:#0e5a8a;color:#fff;font-weight:700;font-size:9.5px;padding:3px 6px">
+                                ATTAINABLE | Representative unit types</div>
+                            <table>
+                                <tr>
+                                    <td style="background:#f6f4f0">Studio</td>
+                                    <td style="background:#f6f4f0">60 units</td>
+                                    <td style="background:#f6f4f0">$3,515</td>
+                                </tr>
+                                <tr>
+                                    <td style="background:#f6f4f0">1BR</td>
+                                    <td style="background:#f6f4f0">200 units</td>
+                                    <td style="background:#f6f4f0">$4,470</td>
+                                </tr>
+                                <tr>
+                                    <td style="background:#f6f4f0">2BR</td>
+                                    <td style="background:#f6f4f0">100 units</td>
+                                    <td style="background:#f6f4f0">$5,735</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div style="flex:1">
+                            <div style="background:#7a9a3f;color:#fff;font-weight:700;font-size:9.5px;padding:3px 6px">
+                                STANDARD | Representative unit types</div>
+                            <table>
+                                <tr>
+                                    <td style="background:#f6f4f0">Studio</td>
+                                    <td style="background:#f6f4f0">33 units</td>
+                                    <td style="background:#f6f4f0">$4,045</td>
+                                </tr>
+                                <tr>
+                                    <td style="background:#f6f4f0">1BR</td>
+                                    <td style="background:#f6f4f0">148 units</td>
+                                    <td style="background:#f6f4f0">$4,920</td>
+                                </tr>
+                                <tr>
+                                    <td style="background:#f6f4f0">2BR</td>
+                                    <td style="background:#f6f4f0">66 units</td>
+                                    <td style="background:#f6f4f0">$6,605</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row" style="gap:6px">
+                        <div style="flex:1">
+                            <div style="background:#6a2c91;color:#fff;font-weight:700;font-size:9.5px;padding:3px 6px">
+                                ULTRA | Representative unit types</div>
+                            <table>
+                                <tr>
+                                    <td style="background:#f6f4f0">1BR</td>
+                                    <td style="background:#f6f4f0">45 units</td>
+                                    <td style="background:#f6f4f0">$6,230</td>
+                                </tr>
+                                <tr>
+                                    <td style="background:#f6f4f0">2BR</td>
+                                    <td style="background:#f6f4f0">60 units</td>
+                                    <td style="background:#f6f4f0">$8,800</td>
+                                </tr>
+                                <tr>
+                                    <td style="background:#f6f4f0">3BR</td>
+                                    <td style="background:#f6f4f0">15 units</td>
+                                    <td style="background:#f6f4f0">$12,600</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div style="flex:1">
+                            <div style="background:#c0442f;color:#fff;font-weight:700;font-size:9.5px;padding:3px 6px">
+                                HIGH-RISE | Representative unit types</div>
+                            <table>
+                                <tr>
+                                    <td style="background:#f6f4f0">Studio</td>
+                                    <td style="background:#f6f4f0">40 units</td>
+                                    <td style="background:#f6f4f0">$4,280</td>
+                                </tr>
+                                <tr>
+                                    <td style="background:#f6f4f0">1BR</td>
+                                    <td style="background:#f6f4f0">180 units</td>
+                                    <td style="background:#f6f4f0">$5,830</td>
+                                </tr>
+                                <tr>
+                                    <td style="background:#f6f4f0">2BR</td>
+                                    <td style="background:#f6f4f0">80 units</td>
+                                    <td style="background:#f6f4f0">$8,130</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="sm" style="font-style:italic;margin-top:4px">Illustrative market-rate asking rents;
+                        values shown are rounded.</div>
+                </div>
+                <div class="card" style="flex:1">
+                    <div class="hd "><em>6</em>Residential Project Economics</div>
+                    <table class="eco">
+                        <tr>
+                            <th style="background:none"></th>
+                            <th class="h-bl">Attainable<br>(400 units)</th>
+                            <th class="h-gr">Standard<br>(330 units)</th>
+                            <th class="h-pu">Ultra-Luxury<br>(150 units)</th>
+                            <th class="h-rd">High-Rise<br>(400 units)</th>
+                        </tr>
+                        <tr>
+                            <td>Units</td>
+                            <td>400</td>
+                            <td>330</td>
+                            <td>150</td>
+                            <td>400</td>
+                        </tr>
+                        <tr>
+                            <td>NOI</td>
+                            <td>$15.08M</td>
+                            <td>$14.50M</td>
+                            <td>$8.52M</td>
+                            <td>$19.36M</td>
+                        </tr>
+                        <tr>
+                            <td>Cap Rate</td>
+                            <td>4.50%</td>
+                            <td>4.50%</td>
+                            <td>4.50%</td>
+                            <td>4.50%</td>
+                        </tr>
+                        <tr>
+                            <td>Market Value</td>
+                            <td>$335.12M</td>
+                            <td>$322.23M</td>
+                            <td>$189.24M</td>
+                            <td>$430.31M</td>
+                        </tr>
+                        <tr>
+                            <td class="i">Market Value / Unit</td>
+                            <td>$840K</td>
+                            <td>$980K</td>
+                            <td>$1.26M</td>
+                            <td>$1.08M</td>
+                        </tr>
+                        <tr>
+                            <td>YOC</td>
+                            <td>5.50%</td>
+                            <td>5.50%</td>
+                            <td>5.50%</td>
+                            <td>5.50%</td>
+                        </tr>
+                        <tr>
+                            <td>Max. Dev. Cost (incl. Land)</td>
+                            <td>$274.19M</td>
+                            <td>$263.65M</td>
+                            <td>$154.83M</td>
+                            <td>$352.07M</td>
+                        </tr>
+                        <tr>
+                            <td class="i">Max. Cost / Unit</td>
+                            <td>$685,475</td>
+                            <td>$798,939</td>
+                            <td>$1,032,200</td>
+                            <td>$880,175</td>
+                        </tr>
+                        <tr>
+                            <td>Est. Dev. Cost (excl. Land)</td>
+                            <td>$192.25M</td>
+                            <td>$207.86M</td>
+                            <td>$140.90M</td>
+                            <td>$363.83M</td>
+                        </tr>
+                        <tr>
+                            <td class="i">Est. Cost / Unit</td>
+                            <td>$480,625</td>
+                            <td>$629,879</td>
+                            <td>$939,333</td>
+                            <td>$909,575</td>
+                        </tr>
+                        <tr>
+                            <td>Residual Land Value</td>
+                            <td>$80.00M</td>
+                            <td>$56.10M</td>
+                            <td>$13.50M</td>
+                            <td>N/A</td>
+                        </tr>
+                        <tr>
+                            <td class="i">RLV / Unit</td>
+                            <td>$200K</td>
+                            <td>$170K</td>
+                            <td>$90K</td>
+                            <td>N/A</td>
+                        </tr>
+                        <tr>
+                            <td class="i">RLV / Acre</td>
+                            <td>$16.39M</td>
+                            <td>$16.91M</td>
+                            <td>$7.43M</td>
+                            <td>N/A</td>
+                        </tr>
+                    </table>
+                    <div class="eco-note">Note for project economics</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="hd "><em>7</em>key Project Economic Inputs</div>
+                <table class="">
+                    <tr>
+                        <th>PRODUCT</th>
+                        <th>NET SF</th>
+                        <th>EFF.</th>
+                        <th>UNITS/AC</th>
+                        <th>AVG. RENT/SF</th>
+                        <th>OTHER</th>
+                        <th>OCC.</th>
+                        <th>OPEX</th>
+                        <th>CAP</th>
+                        <th>HARD COST</th>
+                        <th>SOFT</th>
+                        <th>FIN.</th>
+                        <th>PARKING</th>
+                        <th>SPACES</th>
+                    </tr>
+                    <tr class="bl">
+                        <td>Attainable</td>
+                        <td>699</td>
+                        <td>80%</td>
+                        <td>80</td>
+                        <td>$6.29</td>
+                        <td>8%</td>
+                        <td>95%</td>
+                        <td>30%</td>
+                        <td>4.5%</td>
+                        <td>$370/gsf</td>
+                        <td>20%</td>
+                        <td>5%</td>
+                        <td>$40K</td>
+                        <td>1.00</td>
+                    </tr>
+                    <tr class="gr">
+                        <td>Standard</td>
+                        <td>828</td>
+                        <td>80%</td>
+                        <td>100</td>
+                        <td>$6.19</td>
+                        <td>8%</td>
+                        <td>95%</td>
+                        <td>30%</td>
+                        <td>4.5%</td>
+                        <td>$410/gsf</td>
+                        <td>20%</td>
+                        <td>5%</td>
+                        <td>$40K</td>
+                        <td>1.30</td>
+                    </tr>
+                    <tr class="pu">
+                        <td>Ultra-Luxury</td>
+                        <td>1,040</td>
+                        <td>80%</td>
+                        <td>80</td>
+                        <td>$7.42</td>
+                        <td>8%</td>
+                        <td>95%</td>
+                        <td>40%</td>
+                        <td>4.5%</td>
+                        <td>$500/gsf</td>
+                        <td>20%</td>
+                        <td>5%</td>
+                        <td>$40K</td>
+                        <td>1.50</td>
+                    </tr>
+                    <tr class="rd">
+                        <td>High-Rise</td>
+                        <td>800</td>
+                        <td>80%</td>
+                        <td>300</td>
+                        <td>$7.60</td>
+                        <td>8%</td>
+                        <td>95%</td>
+                        <td>35%</td>
+                        <td>4.5%</td>
+                        <td>$600/gsf</td>
+                        <td>20%</td>
+                        <td>5%</td>
+                        <td>$70K</td>
+                        <td>1.25</td>
+                    </tr>
+                </table>
+                <div class="sm" style="margin-top:3px">Underwriting assumptions from RCLCO, September 2026; blended
+                    rents incorporate an affordable housing component. Parking amounts are per space.</div>
+            </div>
+            <div class="card">
+                <div class="hd "><em>8</em><img class="hd-icon" src="SLAC_Dashboard_Individual_Icons/31_Key_Lessons_Lightbulb.png" alt="">Case Study / Lessons Learned</div><b class="n" style="font-size:14px">RELATED
+                    BRISTOL &nbsp;•&nbsp; SANTA ANA, CALIFORNIA</b>
+                <div class="row" style="margin-top:6px">
+                    <div class="ph" id="img-1" style="width:450px;min-height:300px">[ Photo ]</div>
+                    <div style="flex:1"><span style="font-size:24px;font-weight:800;color:var(--red)">3,750</span style="font-size:14px">
+                        residential units<div class="n" style="font-weight:700;font-size:15px;margin:3px 0">41 acres
+                            &nbsp;•&nbsp; 2.7 FAR</div>
+                        <div style="margin-bottom:6px; font-size:14px">Includes 350,000 SF of commercial space, 250 hotel rooms, and 200
+                            senior care units.</div>
+                        <div style="margin-bottom:6px; font-size:14px">Phased execution over ~10 years provides flexibility to respond to changing market
+                            conditions.</div>
+                    </div>
+                    <div class="box tan" style="width:340px"><b style="color:#8a6a2f;font-size:13px">💡 Key Lessons for
+                            SRP</b>
+                        <ul style="margin-top:5px; font-size:14px">
+                            <li>Research and employment campuses can anchor a self-contained mixed-use district.</li>
+                            <li>Offer a progression of housing choices for changing life stages.</li>
+                            <li>Introduce retail, connected public space, and walkable amenities early.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="hd">Appendix</div>
+            </div>
+        </div>
+        </div>
+    </div>
+</body>
+
+</html>
